@@ -34,122 +34,77 @@
             gap: 10px;
         }
 
-        #tasks-date-container {
-            width: 100%;
-            height: 30px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 20px;
-            position: relative;
+        #name-container, #explanation-container {
+            margin-top: 20px;
         }
 
-        .today-section-button {
-            width: 150px;
-            height: 30px;
+        label {
             color: #fff;
+        }
+
+        input, textarea {
+            width: 100%;
+            margin-top: 5px;
+            padding: 8px;
+            border: 1px solid #32ADE6;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
             background-color: #32ADE6;
+            color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .tomorrow-section-button {
-            width: 150px;
-            height: 30px;
-            color: #fff;
-            background-color: transparent;
-            border: none;
-            border-radius: 10px;
+        button:hover {
+            background-color: #239abf;
         }
-
-        #name-container {
-
-        }
-
-        #pix-text {
-            color: #32ADE6;
-            gap: 10px;
-        }
-        
-        #name-box {
-            color: #fff;
-            gap: 10px;
-        }
-
-        #explanation-container {
-            width: 350px;
-            height: 650px;
-            color: #fff;
-        }
-
-        #setting-container {
-            width: 100%;
-            height: 30px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 20px;
-            position: relative;
-        }
-
-        .edit-button {
-            width: 150px;
-            height: 30px;
-            color: #fff;
-            background-color: transparent;
-            border: none;
-            border-radius: 10px;
-        }
-
-        .deletion-button {
-            width: 150px;
-            height: 30px;
-            color: #fff;
-            background-color: transparent;
-            border: none;
-            border-radius: 10px;
-        }
-
     </style>
 </head>
 <body>
     <div id="tasks-container">
         <div id="top-container">
-            <div id="back-box">
-                <a><input onclick="location.href='index.html'" class="back-button" type="button" value="<"></a>
-            </div>
-            <div id="top-name-box">
-                <a id="top-name-text">일정명</a>
-            </div>
-        </div>
-        <div id="tasks-date-container">
-            <div id="tasks-today-box">
-                <a><input class="today-section-button" type="button" value="오늘"></a>
-            </div>
-            <div id="tasks-tomorrow-box">
-                <a><input class="tomorrow-section-button" type="button" value="내일"></a>
-            </div>
+            <button class="back-button" onclick="location.href='index.html'">&lt; 돌아가기</button>
         </div>
         <div id="name-container">
-            <div id="name-box">
-                <p id="pix-text">일정명</p>
-                <a id="top-name-text">일정명</a>
-            </div>
+            <label for="task-name">일정명:</label>
+            <input id="task-name" type="text" placeholder="일정명을 입력하세요">
         </div>
         <div id="explanation-container">
-            <div id="explanation-box">
-                <p id="pix-text">일정에 대한 설명</p>
-                <a id="explanation-text">일정에 대한 조금 더 자세한 설명이 여기에 이렇게 두어중 정도 들어가게 되겠죠 이렇게 더 늘어나면 두 줄 이상 들어갈 수도 있겠죠 이 부분을 누르면 편집할 수 있어도 좋을 것 같아요</a>
-            </div>
+            <label for="task-desc">설명:</label>
+            <textarea id="task-desc" placeholder="설명을 입력하세요"></textarea>
         </div>
-        <div id="setting-container">
-            <div id="setting-button-box1">
-                <a><input class="edit-button" type="button" value="편집"></a>
-            </div>
-            <div id="setting-button-box2">
-                <a><input class="deletion-button" type="button" value="삭제"></a>
-            </div>
-        </div>
+        <button onclick="addTask()">일정 추가</button>
     </div>
+
+    <script>
+        function addTask() {
+            const taskName = document.getElementById('task-name').value;
+            const taskDesc = document.getElementById('task-desc').value;
+
+            if (!taskName) {
+                alert("일정명을 입력하세요!");
+                return;
+            }
+
+            const task = {
+                name: taskName,
+                description: taskDesc,
+                date: new Date().toISOString()
+            };
+
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.push(task);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+            alert("일정이 추가되었습니다!");
+            document.getElementById('task-name').value = '';
+            document.getElementById('task-desc').value = '';
+        }
+    </script>
 </body>
 </html>

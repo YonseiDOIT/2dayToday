@@ -11,87 +11,90 @@
             position: relative;
             padding: 10px;
         }
+
         #main-date-container {
-            width: 250px;
-            height: 40px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-        #date {
-            width: 140px;
-            height: 25px;
+            margin-bottom: 20px;
             color: #fff;
         }
-        #day {
-            width: 100px;
-            height: 25px;
-            color: #fff;
-        }
+
         #top-container {
-            position: relative;
-            padding: 10px;
             display: flex;
-            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
         }
-        .top-today-button {
+
+        .top-today-button, .top-tomorrow-button, .top-plus-button {
             color: #fff;
             background-color: transparent;
             border: none;
-        }
-
-        .top-tomorrow-button {
-            color: #fff;
-            background-color: transparent;
-            border: none;
-        }
-
-        #plus-box {
-            display: flex;
-            margin-left: auto;
+            cursor: pointer;
         }
 
         .top-plus-button {
-            color: #fff;
-            background-color: transparent;
-            border: none;
+            font-size: 1.5em;
         }
 
         #schedule-container {
-            position: relative;
-        }        
+            margin-top: 20px;
+        }
+
+        #schedule-container h3 {
+            color: #fff;
+        }
+
+        #task-list {
+            list-style: none;
+            padding: 0;
+            color: #fff;
+        }
+
+        #task-list li {
+            background-color: #1e1e1e;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <div id="main_container">
         <div id="main-date-container">
-            <a id="date"></a>
-            <a id="day"></a>
+            <div id="date"></div>
+            <div id="day"></div>
         </div>
         <div id="top-container">
-            <div id="day-box">
-                <a><input class="top-today-button" type="button" value="오늘"></a>
-                <a><input class="top-tomorrow-button" type="button" value="내일"></a>
-            </div>
-            <div id="plus-box">
-                <a><input onclick="location.href='tasks.html'" class="top-plus-button" type="button" value="+"></a>
-            </div>
+            <button class="top-today-button">오늘</button>
+            <button class="top-tomorrow-button">내일</button>
+            <button class="top-plus-button" onclick="location.href='tasks.html'">+</button>
         </div>
         <div id="schedule-container">
-            <div id="main-today-box">
-
-            </div>
-            <div id="main-tomorrow-box">
-
-            </div>
+            <h3>오늘의 일정</h3>
+            <ul id="task-list"></ul>
         </div>
     </div>
+
+    <script>
+        function loadTasks() {
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML = '';
+
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${index + 1}. ${task.name} - ${task.description}`;
+                taskList.appendChild(li);
+            });
+        }
+
+        window.onload = () => {
+            const today = new Date();
+            const dayNames = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+
+            document.getElementById('date').textContent = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
+            document.getElementById('day').textContent = dayNames[today.getDay()];
+
+            loadTasks();
+        };
+    </script>
 </body>
-<script>
-    let today = new Date();
-    var day_check = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
-    document.getElementById('date').innerText = `${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`;
-    document.getElementById("day").innerText = day_check[today.getDay()];
-</script>
 </html>
