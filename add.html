@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>일정 수정 페이지</title>
+    <title>일정 추가 페이지</title>
     <style>
         #tasks-container {
             width: 390px;
@@ -25,14 +25,6 @@
             border: none;
             font-size: 1.5em;
             cursor: pointer;
-        }
-
-        .task-title {
-            color: #fff;
-            font-size: 1.2em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         #top-container {
@@ -87,27 +79,13 @@
         button:hover {
             background-color: #239abf;
         }
-
-        .delete-button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #FF5252;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .delete-button:hover {
-            background-color: #D32F2F;
-        }
     </style>
 </head>
 <body>
     <div id="tasks-container">
         <div id="header-container">
             <button class="back-button" onclick="goBack()">&#60;</button>
-            <span id="task-title" class="task-title"></span>
+            <span class="task-title">일정 추가</span>
         </div>
         <div id="top-container">
             <button id="today-tab" class="tab-button" onclick="switchTab('today')">오늘</button>
@@ -121,12 +99,11 @@
             <label for="task-desc">설명:</label>
             <textarea id="task-desc" placeholder="설명을 입력하세요"></textarea>
         </div>
-        <button onclick="addTask()">일정 수정</button>
-        <button class="delete-button" onclick="deleteTask()">일정 삭제</button>
+        <button onclick="addNewTask()">일정 추가</button>
     </div>
 
     <script>
-        // 탭 활성화 상태 설정
+        // 현재 활성 탭 상태를 표시
         function setActiveTab(tab) {
             const todayTab = document.getElementById('today-tab');
             const tomorrowTab = document.getElementById('tomorrow-tab');
@@ -155,24 +132,14 @@
             location.href = 'index.html';
         }
 
-        // 페이지 로드 시 실행
+        // 페이지 로드 시 초기화
         window.onload = () => {
             const activeTab = localStorage.getItem('activeTab') || 'today';
             setActiveTab(activeTab);
-
-            const editIndex = localStorage.getItem('editIndex');
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-            if (editIndex !== null) {
-                const task = tasks[editIndex];
-                document.getElementById('task-name').value = task.name;
-                document.getElementById('task-desc').value = task.description;
-                document.getElementById('task-title').textContent = task.name || '일정명';
-            }
         };
 
-        // 일정 추가
-        function addTask() {
+        // 새로운 일정 추가 로직
+        function addNewTask() {
             const taskName = document.getElementById('task-name').value;
             const taskDesc = document.getElementById('task-desc').value;
 
@@ -181,43 +148,21 @@
                 return;
             }
 
-            const editIndex = localStorage.getItem('editIndex');
             let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
             const activeTab = localStorage.getItem('activeTab') || 'today';
-            let taskDate = new Date();
 
+            let taskDate = new Date();
             if (activeTab === 'tomorrow') {
                 taskDate.setDate(taskDate.getDate() + 1);
             }
 
             const formattedDate = taskDate.toISOString();
 
-            if (editIndex !== null) {
-                const completed = tasks[editIndex].completed || false; // 기존 completed 상태 유지
-                tasks[editIndex] = { name: taskName, description: taskDesc, date: formattedDate, completed };
-                localStorage.removeItem('editIndex');
-            } else {
-                tasks.push({ name: taskName, description: taskDesc, date: formattedDate, completed: false });
-            }
+            // 새 일정 추가
+            tasks.push({ name: taskName, description: taskDesc, date: formattedDate, completed: false });
 
             localStorage.setItem('tasks', JSON.stringify(tasks));
             location.href = 'index.html';
-        }
-
-        // 일정 삭제
-        function deleteTask() {
-            const editIndex = localStorage.getItem('editIndex');
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-            if (editIndex !== null) {
-                tasks.splice(editIndex, 1);
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                localStorage.removeItem('editIndex');
-                location.href = 'index.html';
-            } else {
-                alert("삭제할 일정이 선택되지 않았습니다!");
-            }
         }
     </script>
 </body>
