@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>일정 수정 페이지</title>
     <style>
         #tasks-container {
@@ -12,6 +13,7 @@
             padding: 10px;
         }
 
+        /* 상단 헤더 */
         #header-container {
             display: flex;
             justify-content: space-between;
@@ -27,137 +29,120 @@
             cursor: pointer;
         }
 
+        .back-button:hover {
+            color: #32ADE6;
+        }
+
         .task-title {
             color: #fff;
             font-size: 1.2em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        #top-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .tab-button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            color: #fff;
+        /* 입력 필드 */
+        #name-container, #explanation-container {
+            margin-top: 20px;
         }
 
         #pix-text {
             color: #32ADE6;
-            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        #name-container, #explanation-container {
-            margin-top: 20px;
-        }
-        #name-box input {
-            width: 200px;
-            height: 25px;
+        #name-text {
             color: #fff;
-            background-color: #000;
-            border: none;    
-        }
-        #name-text-input {
-            display: none;
         }
 
-        label {
-            color: #fff;
-        }
-        #explanation-box textarea {
+        #explanation-text {
             width: 350px;
             height: 550px;
             color: #fff;
             background-color: #000;
-            border: none;
+            border: 1px solid #32ADE6;
+            resize: none;
         }
 
-        #explanation-text-input {
-            display: none; 
-        }
-
-        #setting-container {
+        #name-text-input, #explanation-text-input {
+            display: none;
+            color: #fff;
+            background-color: #000;
+            border: 1px solid #32ADE6;
             width: 100%;
             margin-top: 5px;
-            padding: 8px;
-            border: 1px solid #32ADE6;
-            border-radius: 5px;
         }
-        #setting-button-box1 input {
-            width: 150px;
-            height: 30px;
 
+        textarea {
+            width: 350px;
+            height: 550px;
+        }
+
+        /* 버튼 컨테이너 */
+        #button-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .action-button {
+            width: 150px;
+            height: 40px;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            background-color: #32ADE6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        button:hover {
+
+        .action-button img.button-icon {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+        }
+
+        .action-button:hover {
             background-color: #239abf;
         }
 
-        #setting-button-box2 input {
-            width: 150px;
-            height: 30px;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /*팝업 배경*/
+        /* 모달 팝업 */
         .modal {
-	        display: none; /*평소에는 보이지 않도록*/
+            display: none;
             position: absolute;
-            top:0;
+            top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
             overflow: hidden;
             background: rgba(0,0,0,0.5);
         }
-        .modal .modal-popup { /*팝업*/
+
+        .modal .modal-popup {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             padding: 20px;
             background: #000;
-            border-style: solid;
-            border-width: 3px;
-            border-color: #fff;
+            border: 3px solid #fff;
             border-radius: 20px;
             color: #fff;
+            text-align: center;
         }
-        .deletion-btn {
-            display: block;
+
+        .deletion-btn, .cancel-btn {
             padding: 10px 20px;
-            background-color: #000;
+            margin: 10px;
+            background-color: #32ADE6;
             border: none;
             border-radius: 5px;
             color: #fff;
             cursor: pointer;
-            transition: box-shadow 0.2s;
-            float: left;
         }
-        .cancel-btn {
-            display: block;
-            padding: 10px 20px;
-            background-color: #000;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            cursor: pointer;
-            transition: box-shadow 0.2s;
-            float: right;
+
+        .deletion-btn:hover, .cancel-btn:hover {
+            background-color: #239abf;
         }
 
         .modal.on {
@@ -171,115 +156,93 @@
             <button class="back-button" onclick="goBack()">&#60;</button>
             <span id="task-title" class="task-title"></span>
         </div>
-        <div id="top-container">
-            <button id="today-tab" class="tab-button" onclick="switchTab('today')">오늘</button>
-            <button id="tomorrow-tab" class="tab-button" onclick="switchTab('tomorrow')">내일</button>
-        </div>
         <div id="name-container">
-            <div id="name-box">
-                <p id="pix-text">일정명</p>
-                <a id="name-text">일정명</a>
-                <input type="text" id="name-text-input">
-            </div>
+            <p id="pix-text">일정명</p>
+            <span id="name-text"></span>
+            <input type="text" id="name-text-input">
         </div>
         <div id="explanation-container">
-            <div id="explanation-box">
-                <p id="pix-text">일정에 대한 설명</p>
-                <textarea id="explanation-text">일정에 대한 자세한 설명이 여기에 작성해주세요^^</textarea>
-                <textarea id="explanation-text-input"></textarea>
-            </div>
+            <p id="pix-text">일정 설명</p>
+            <textarea id="explanation-text" readonly></textarea>
+            <textarea id="explanation-text-input"></textarea>
         </div>
-        <div id="setting-container">
-            <div id="setting-button-box1">
-                <a><input id="edit-button" type="button" value="편집"></a>
-            </div>
-            <div id="setting-button-box2">
-                <a><input class="deletion-button" type="button" value="삭제"></a>
-            </div>
-
+        <div id="button-container">
+            <button id="edit-button" class="action-button">
+                <img src="assets/images/edit_note.svg" alt="Edit Icon" class="button-icon"> 편집
+            </button>
+            <button id="delete-button" class="action-button">
+                <img src="assets/images/delete_forever.svg" alt="Delete Icon" class="button-icon"> 삭제
+            </button>
         </div>
-        <button onclick="addTask()">일정 수정</button>
-        <button class="delete-button" onclick="deleteTask()">일정 삭제</button>
     </div>
 
-    <!--모달 삭제 팝업-->
+    <!-- 모달 팝업 -->
     <div class="modal">
         <div class="modal-popup">
-            <h3>정말 삭제 하시겠습니까?</h3>
-            <p>삭제하시면 되돌릴 수 없고 메인 페이지로 이동합니다</p>
-            <button type="button" class="deletion-btn" id="deletion-btn">삭제</button>
-            <button type="button" class="cancel-btn" id="cancel-btn">취소</button>
+            <h3>정말 삭제하시겠습니까?</h3>
+            <p>삭제하시면 되돌릴 수 없습니다.</p>
+            <button type="button" class="deletion-btn">삭제</button>
+            <button type="button" class="cancel-btn">취소</button>
         </div>
     </div>
-    <!--end 모달 삭제 팝업-->
 
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        const nameText = document.getElementById('name-text');
+        const nameInput = document.getElementById('name-text-input');
+        const explanationText = document.getElementById('explanation-text');
+        const explanationInput = document.getElementById('explanation-text-input');
+        const editButton = document.getElementById('edit-button');
+        const deleteButton = document.getElementById('delete-button');
+
+        let isEditing = false;
+
+        window.onload = () => {
+            const editIndex = localStorage.getItem('editIndex');
+            if (!editIndex) {
+                alert('수정할 일정이 선택되지 않았습니다.');
+                window.location.href = 'index.html';
+            } else {
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                const task = tasks[editIndex];
+                if (task) {
+                    nameText.textContent = task.name;
+                    explanationText.value = task.description;
+                }
+            }
+        };
+
+        editButton.onclick = () => {
+            if (!isEditing) {
+                nameInput.value = nameText.textContent;
+                explanationInput.value = explanationText.value;
+
+                nameText.style.display = 'none';
+                explanationText.style.display = 'none';
+                nameInput.style.display = 'block';
+                explanationInput.style.display = 'block';
+
+                editButton.innerHTML = '<img src="assets/images/check_circle.svg" alt="Save Icon" class="button-icon"> 저장';
+                deleteButton.innerHTML = '<img src="assets/images/cancel.svg" alt="Cancel Icon" class="button-icon"> 취소';
+                isEditing = true;
+            } else {
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                const editIndex = localStorage.getItem('editIndex');
+                tasks[editIndex].name = nameInput.value;
+                tasks[editIndex].description = explanationInput.value;
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+
+                nameText.textContent = nameInput.value;
+                explanationText.value = explanationInput.value;
+
+                editButton.innerHTML = '<img src="assets/images/edit_note.svg" alt="Edit Icon" class="button-icon"> 편집';
+                deleteButton.innerHTML = '<img src="assets/images/delete_forever.svg" alt="Delete Icon" class="button-icon"> 삭제';
+                isEditing = false;
+            }
+        };
+    </script>
 </body>
-<script>
-    // 편집 버튼 관련 코드
-    const explanationText = document.getElementById('explanation-text');
-    const nameText = document.getElementById('name-text');
-    const editInput = document.getElementById('explanation-text-input');
-    const nameInput = document.getElementById('name-text-input');
-    const editButton = document.getElementById('edit-button');
-
-    let isEditing = false; // 수정 상태를 추적
-
-    editButton.addEventListener('click', () => {
-      if (!isEditing) 
-      {      // 수정 모드로 전환
-        editInput.value = explanationText.textContent; // 기존 텍스트 복사
-        nameInput.value = nameText.textContent; 
-
-        explanationText.style.display = 'none'; // 텍스트 숨기기
-        nameText.style.display = 'none';
-
-        editInput.style.display = 'block'; // 입력 필드 보이기
-        nameInput.style.display = 'block';
-
-        editInput.focus(); // 포커스 주기
-        nameInput.focus();
-
-        editButton.value = '저장'; // 버튼 텍스트 변경
-        isEditing = true;
-      } 
-      else 
-      {    // 수정 저장 모드로 전환
-
-        explanationText.textContent = editInput.value; // 새 텍스트 설정
-        nameText.textContent = nameInput.value;
-
-        editInput.style.display = 'none'; // 입력 필드 숨기기
-        nameInput.style.display = 'none';
-
-        explanationText.style.display = 'block'; // 텍스트 보이기
-        nameText.style.display = 'block';
-
-        editButton.value = '편집'; // 버튼 텍스트 변경
-        isEditing = false;
-      }
-    });
-
-    // 삭제 버튼 관련 코드
-    const modal = document.querySelector('.modal');
-    const modalOpen = document.querySelector('.deletion-button');
-    const modaldel = document.querySelector('.deletion-btn')
-    const modalClose = document.querySelector('.cancel-btn');
-
-    // 모달 열기
-    modalOpen.addEventListener('click', function () {
-        modal.classList.add('on');
-    });
-
-    // 취소 버튼
-    modalClose.addEventListener('click', function () {
-        modal.classList.remove('on');
-    });
-
-    // 삭제 버튼
-    modaldel.addEventListener('click', function () {
-        alert('삭제되었습니다.');
-        modal.classList.remove('on');
-        location.href='index.html';
-    });
-</script>
 </html>

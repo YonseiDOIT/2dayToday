@@ -2,14 +2,20 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>메인 페이지</title>
     <style>
         #main_container {
-            width: 390px;
-            height: 850px;
+            width: 100vw; /* 뷰포트 너비에 맞춤 */
+            height: 100vh; /* 뷰포트 높이에 맞춤 */
+            max-width: 360px; /* 최대 너비 설정 */
+            max-height: 640px; /* 최대 높이 설정 */
             background-color: #000;
             position: relative;
             padding: 10px;
+            margin: 0 auto; /* 가운데 정렬 */
+            box-sizing: border-box;
+            overflow-y: auto;
         }
 
         #main-date-container {
@@ -75,6 +81,18 @@
             text-decoration: line-through;
             color: #999;
         }
+        .top-plus-button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .add-button-icon {
+            width: 24px; /* 원하는 크기로 조정 */
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
     </style>
 </head>
 <body>
@@ -86,7 +104,9 @@
         <div id="top-container">
             <button class="top-today-button" onclick="switchTab('today')">오늘</button>
             <button class="top-tomorrow-button" onclick="switchTab('tomorrow')">내일</button>
-            <button class="top-plus-button" onclick="location.href='add.html'">+</button>
+            <button class="top-plus-button" onclick="location.href='add.html'">
+                <img src="assets/images/add_circle.svg" alt="Add Button" class="add-button-icon">
+            </button>
         </div>
         <div id="schedule-container">
             <h3 id="schedule-title">오늘의 일정</h3>
@@ -155,7 +175,7 @@
         function editTask(originalIndex) {
             // 수정할 데이터 인덱스를 localStorage에 저장
             localStorage.setItem('editIndex', originalIndex);
-            location.href = 'tasks.html'; // 일정 추가 페이지로 이동
+            window.location.href = './tasks.html'; // 일정 추가 페이지로 이동
         }
 
         function switchTab(tab) {
