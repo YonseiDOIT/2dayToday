@@ -2,74 +2,61 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>일정 추가 페이지</title>
+    <title>일정 수정 페이지</title>
     <style>
         #tasks-container {
             width: 390px;
             height: 850px;
             background-color: #000;
             position: relative;
-            gap: 10px;
             padding: 10px;
         }
 
-        #top-container {
-            width: 150px;
-            height: 30px;
+        #header-container {
             display: flex;
-            flex-direction: row;
-            gap: 10px;
-            position: relative;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         .back-button {
             color: #fff;
             background-color: transparent;
             border: none;
-            gap: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
         }
 
-        #top-name-box {
+        .task-title {
             color: #fff;
-            gap: 10px;
+            font-size: 1.2em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        #tasks-date-container {
-            width: 100%;
-            height: 30px;
+        #top-container {
             display: flex;
-            flex-direction: row;
             justify-content: center;
             gap: 20px;
-            position: relative;
+            margin-bottom: 20px;
         }
 
-        .today-section-button {
-            width: 150px;
-            height: 30px;
-            color: #fff;
-            background-color: #32ADE6;
+        .tab-button {
+            padding: 10px 20px;
             border: none;
-            border-radius: 10px;
-        }
-
-        .tomorrow-section-button {
-            width: 150px;
-            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
             color: #fff;
-            background-color: transparent;
-            border: none;
-            border-radius: 10px;
         }
 
         #pix-text {
             color: #32ADE6;
             gap: 10px;
         }
-        
-        #name-box {
-            color: #fff;
-            gap: 10px;
+
+        #name-container, #explanation-container {
+            margin-top: 20px;
         }
         #name-box input {
             width: 200px;
@@ -82,12 +69,9 @@
             display: none;
         }
 
-        #explanation-container {
-            width: 350px;
-            height: 650px;
+        label {
             color: #fff;
         }
-
         #explanation-box textarea {
             width: 350px;
             height: 550px;
@@ -102,30 +86,31 @@
 
         #setting-container {
             width: 100%;
-            height: 30px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 20px;
-            position: relative;
+            margin-top: 5px;
+            padding: 8px;
+            border: 1px solid #32ADE6;
+            border-radius: 5px;
         }
-
         #setting-button-box1 input {
             width: 150px;
             height: 30px;
+
             color: #fff;
-            background-color: transparent;
             border: none;
-            border-radius: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #239abf;
         }
 
         #setting-button-box2 input {
             width: 150px;
             height: 30px;
             color: #fff;
-            background-color: transparent;
             border: none;
-            border-radius: 10px;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         /*팝업 배경*/
@@ -182,21 +167,13 @@
 </head>
 <body>
     <div id="tasks-container">
-        <div id="top-container">
-            <div id="back-box">
-                <a><input onclick="location.href='index.html'" class="back-button" type="button" value="<"></a>
-            </div>
-            <div id="top-name-box">
-                <a id="top-name-text">일정명</a>
-            </div>
+        <div id="header-container">
+            <button class="back-button" onclick="goBack()">&#60;</button>
+            <span id="task-title" class="task-title"></span>
         </div>
-        <div id="tasks-date-container">
-            <div id="tasks-today-box">
-                <a><input class="today-section-button" type="button" value="오늘"></a>
-            </div>
-            <div id="tasks-tomorrow-box">
-                <a><input class="tomorrow-section-button" type="button" value="내일"></a>
-            </div>
+        <div id="top-container">
+            <button id="today-tab" class="tab-button" onclick="switchTab('today')">오늘</button>
+            <button id="tomorrow-tab" class="tab-button" onclick="switchTab('tomorrow')">내일</button>
         </div>
         <div id="name-container">
             <div id="name-box">
@@ -219,7 +196,10 @@
             <div id="setting-button-box2">
                 <a><input class="deletion-button" type="button" value="삭제"></a>
             </div>
+
         </div>
+        <button onclick="addTask()">일정 수정</button>
+        <button class="delete-button" onclick="deleteTask()">일정 삭제</button>
     </div>
 
     <!--모달 삭제 팝업-->
