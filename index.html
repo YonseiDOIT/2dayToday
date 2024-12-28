@@ -104,7 +104,7 @@
         <div id="top-container">
             <button class="top-today-button" onclick="switchTab('today')">오늘</button>
             <button class="top-tomorrow-button" onclick="switchTab('tomorrow')">내일</button>
-            <button class="top-plus-button" onclick="location.href='add.html'">
+            <button class="top-plus-button" onclick="addTaskAndRedirect()">
                 <img src="assets/images/add_circle.svg" alt="Add Button" class="add-button-icon">
             </button>
         </div>
@@ -198,6 +198,32 @@
 
             loadTasks(); // 일정 로드
         };
+
+        // 일정 추가 페이지로 이동
+        function addTaskAndRedirect() {
+
+                    // tasks 배열 초기화
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+            // 임의의 일정 추가
+            const randomTask = {
+                name: '새 일정',
+                description: '',
+                date: new Date().toISOString().split('T')[0], // 날짜만 저장
+                completed: false
+            };
+
+            // 배열에 새 일정 추가
+            tasks.push(randomTask);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+            // 방금 추가된 일정의 인덱스를 저장
+            const newIndex = tasks.length - 1;
+            localStorage.setItem('editIndex', newIndex);
+
+            // 일정 수정 페이지로 이동
+            window.location.href = 'tasks.html';
+        }
 </script>
 
 </body>
