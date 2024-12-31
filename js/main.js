@@ -23,7 +23,49 @@ function initializePage() {
     loadTasks();
 }
 
-// 일정 로드
+// ✅ 스와이프 기능 추가 
+//  기본 브라우저 스와이프 비활성화
+let touchStartX = 0;
+let touchEndX = 0;
+
+// 터치 시작 시 X 좌표 저장 및 기본 동작 방지
+document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+}, { passive: true });
+
+// 터치 이동 시 브라우저 기본 스와이프 동작 방지
+document.addEventListener('touchmove', (e) => {
+    e.preventDefault(); // 기본 스와이프 동작 방지
+}, { passive: false });
+
+// 터치 종료 시 X 좌표 저장 및 스와이프 방향 확인
+document.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipeGesture();
+});
+
+// 스와이프 동작 처리
+function handleSwipeGesture() {
+    const swipeDistance = touchEndX - touchStartX;
+    const scheduleContainer = document.getElementById('schedule-container');
+
+    if (swipeDistance > 50) {
+        // 오른쪽 스와이프 (오늘로 이동)
+        scheduleContainer.classList.add('swipe-right');
+        setTimeout(() => {
+            switchTab('today');
+            scheduleContainer.classList.remove('swipe-right');
+        }, 300);
+    } else if (swipeDistance < -50) {
+        // 왼쪽 스와이프 (내일로 이동)
+        scheduleContainer.classList.add('swipe-left');
+        setTimeout(() => {
+            switchTab('tomorrow');
+            scheduleContainer.classList.remove('swipe-left');
+        }, 300);
+    }
+}
+
 // ✅ 일정 로드
 function loadTasks() {
     const taskList = document.getElementById('task-list');

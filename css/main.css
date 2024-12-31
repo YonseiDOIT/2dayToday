@@ -73,6 +73,17 @@ body {
     overflow-y: auto;
     max-height: calc(100vh - 200px);
     margin-top: 10px;
+    
+/* ✅ 스와이프 전환 애니메이션 */
+    transition: transform 0.2s ease-in-out;
+}
+
+#schedule-container.swipe-left {
+    transform: translateX(-100%);
+}
+
+#schedule-container.swipe-right {
+    transform: translateX(100%);
 }
 
 #task-list {
