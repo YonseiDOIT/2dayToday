@@ -24,21 +24,20 @@ body {
 
 /* ✅ 날짜 및 네비게이션 */
 #main-date-container {
-    margin-bottom: 20px;
     color: #fff;
+    margin: 10px 12px
 }
 
 #top-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    gap: 0; /* gap 제거 */
 }
 
 /* ✅ 오늘/내일 버튼 공통 스타일 */
 .top-today-button,
 .top-tomorrow-button {
-
-    
     color: #fff;
     background-color: transparent;
     border: none;
@@ -56,6 +55,7 @@ body {
 }
 
 .top-plus-button {
+    margin-left: auto;
     color: #fff;
     background-color: transparent;
     border: none;
@@ -101,7 +101,7 @@ body {
     margin-bottom: 10px;
     padding: 5px;
     background-color: #32ADE6;
-    border-radius: 5px;
+    border-radius: 10px;
     transition: background-color 0.3s ease;
 }
 
