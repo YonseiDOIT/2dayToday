@@ -160,28 +160,32 @@ label {
     margin-top: 20px;
 }
 
+/* ✅ 취소 및 저장 버튼 */
 .action-button {
     width: 150px;
-    height: 40px;
+    height: 45px; /* 높이 약간 증가 */
+    font-size: 1.1em; /* 텍스트 크기 증가 */
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #32ADE6;
+    background-color: #000; /* 부모 배경색과 동일 */
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 */
 }
 
 .action-button img.button-icon {
-    width: 20px;
-    height: 20px;
-    filter: brightness(0) invert(1);
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1); /* 아이콘 흰색 */
 }
 
 .action-button:hover {
-    background-color: #239abf;
+    background-color: #1e1e1e; /* 호버 시 약간 밝은 검정색 */
+    transform: scale(1.05); /* 버튼 살짝 확대 */
 }
 
 /* ✅ 모달 팝업 */
