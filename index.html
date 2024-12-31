@@ -4,99 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>메인 페이지</title>
-    <style>
-        #main_container {
-            width: 100vw; /* 뷰포트 너비에 맞춤 */
-            height: 100vh; /* 뷰포트 높이에 맞춤 */
-            max-width: 360px; /* 최대 너비 설정 */
-            max-height: 640px; /* 최대 높이 설정 */
-            background-color: #000;
-            position: relative;
-            padding: 10px;
-            margin: 0 auto; /* 가운데 정렬 */
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-
-        #main-date-container {
-            margin-bottom: 20px;
-            color: #fff;
-        }
-
-        #top-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .top-today-button, .top-tomorrow-button, .top-plus-button {
-            color: #fff;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-        }
-
-        .top-plus-button {
-            font-size: 1.5em;
-        }
-
-        #schedule-container {
-            margin-top: 20px;
-        }
-
-        #schedule-container h3 {
-            color: #fff;
-        }
-
-        #task-list {
-            list-style: none;
-            padding: 0;
-            color: #fff;
-        }
-
-        #task-list li {
-            background-color: #1e1e1e;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .edit-button {
-            background-color: #32ADE6;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .edit-button:hover {
-            background-color: #239abf;
-        }
-
-        .task-text.completed {
-            text-decoration: line-through;
-            color: #999;
-        }
-        .top-plus-button {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .add-button-icon {
-            width: 24px; /* 원하는 크기로 조정 */
-            height: 24px;
-            filter: brightness(0) invert(1);
-        }
-    </style>
+    <link rel="stylesheet" href="./css/main.css">
+    <script src="./js/main.js" defer></script>
 </head>
 <body>
-    <div id="main_container">
+    <div class="common-container">
         <div id="main-date-container">
             <div id="date"></div>
             <div id="day"></div>
@@ -109,122 +21,11 @@
             </button>
         </div>
         <div id="schedule-container">
-            <h3 id="schedule-title">오늘의 일정</h3>
-            <ul id="task-list"></ul>
+
+            <!-- main.js에서 task list를 동적으로 생성 -->
+            <ul id="task-list"></ul> 
+
         </div>
     </div>
-
-    <script>
-        function loadTasks() {
-            const taskList = document.getElementById('task-list');
-            taskList.innerHTML = ''; // 초기화
-
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            const today = new Date();
-            const tomorrow = new Date();
-            tomorrow.setDate(today.getDate() + 1);
-
-            // 오늘과 내일의 날짜 형식 (YYYY-MM-DD)
-            const todayDate = today.toISOString().split('T')[0];
-            const tomorrowDate = tomorrow.toISOString().split('T')[0];
-
-            // 현재 활성 탭에 따라 일정 필터링
-            const filteredTasks = tasks.map((task, index) => ({
-                ...task,
-                originalIndex: index, // 전체 데이터의 실제 인덱스 저장
-            })).filter(task => {
-                const taskDate = task.date.split('T')[0];
-                return activeTab === 'today' ? taskDate === todayDate : taskDate === tomorrowDate;
-            });
-
-            // 필터링된 일정 표시
-            filteredTasks.forEach((task, index) => {
-                const li = document.createElement('li');
-
-                // 체크박스
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = task.completed || false;
-                checkbox.onchange = () => toggleCompletion(task.originalIndex, checkbox.checked);
-                li.appendChild(checkbox);
-
-                // 일정 텍스트
-                const taskText = document.createElement('span');
-                taskText.textContent = `${task.name} - ${task.description}`;
-                taskText.className = `task-text ${task.completed ? 'completed' : ''}`;
-                li.appendChild(taskText);
-
-                // 수정 버튼
-                const editButton = document.createElement('button');
-                editButton.textContent = '수정';
-                editButton.className = 'edit-button';
-                editButton.onclick = () => editTask(task.originalIndex); // 실제 인덱스 전달
-                li.appendChild(editButton);
-
-                taskList.appendChild(li);
-            });
-        }
-
-        function toggleCompletion(index, isCompleted) {
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks[index].completed = isCompleted; // 완료 상태 업데이트
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            loadTasks(); // UI 업데이트
-        }
-
-        function editTask(originalIndex) {
-            // 수정할 데이터 인덱스를 localStorage에 저장
-            localStorage.setItem('editIndex', originalIndex);
-            window.location.href = './tasks.html'; // 일정 추가 페이지로 이동
-        }
-
-        function switchTab(tab) {
-            activeTab = tab; // 활성화된 탭 변경
-            localStorage.setItem('activeTab', tab); // 현재 탭 상태 저장
-            const scheduleTitle = document.getElementById('schedule-title');
-            scheduleTitle.textContent = tab === 'today' ? '오늘의 일정' : '내일의 일정';
-            loadTasks(); // 일정 다시 로드
-        }
-
-        window.onload = () => {
-            const savedTab = localStorage.getItem('activeTab') || 'today';
-            switchTab(savedTab); // 저장된 탭 상태 유지
-
-            const today = new Date();
-            const dayNames = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일"];
-
-            document.getElementById('date').textContent = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
-            document.getElementById('day').textContent = dayNames[today.getDay()];
-
-            loadTasks(); // 일정 로드
-        };
-
-        // 일정 추가 페이지로 이동
-        function addTaskAndRedirect() {
-
-                    // tasks 배열 초기화
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-            // 임의의 일정 추가
-            const randomTask = {
-                name: '새 일정',
-                description: '',
-                date: new Date().toISOString().split('T')[0], // 날짜만 저장
-                completed: false
-            };
-
-            // 배열에 새 일정 추가
-            tasks.push(randomTask);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-
-            // 방금 추가된 일정의 인덱스를 저장
-            const newIndex = tasks.length - 1;
-            localStorage.setItem('editIndex', newIndex);
-
-            // 일정 수정 페이지로 이동
-            window.location.href = 'tasks.html';
-        }
-</script>
-
-</body>
+</body>  
 </html>

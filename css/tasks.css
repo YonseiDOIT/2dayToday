@@ -1,0 +1,231 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    max-width: 360px;
+    max-height: 640px;
+    margin: 0 auto;
+    background-color: #000;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.common-container {
+    width: 100vw; /* 뷰포트 너비에 맞춤 */
+    height: 100vh; /* 뷰포트 높이에 맞춤 */
+    max-width: 360px; /* 최대 너비 설정 */
+    max-height: 640px; /* 최대 높이 설정 */
+    background-color: #000;
+    position: relative;
+    padding: 10px;
+    margin: 0 auto; /* 가운데 정렬 */
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* 헤더 */
+#header-container {
+    display: flex;
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: flex-start; /* 왼쪽부터 정렬 */
+    gap: 10px; /* 버튼과 제목 사이 여백 */
+    margin-bottom: 20px;
+}
+.back-button {
+    color: #fff;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.task-title {
+    color: #fff;
+    font-size: 1.2em;
+    white-space: nowrap; /* 제목이 줄 바꿈되지 않도록 설정 */
+    overflow: hidden;
+    text-overflow: ellipsis; /* 긴 제목은 ...로 생략 */
+    flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
+}
+
+/* ✅ 날짜 및 네비게이션 */
+#main-date-container {
+    margin-bottom: 20px;
+    color: #fff;
+}
+#top-container {
+    display: flex;
+    justify-content: space-around; /* 버튼을 균등하게 배치 */
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.tab-button {
+    flex: 1; /* 버튼이 동일한 너비를 차지 */
+    padding: 10px 0;
+    border: none;
+    border-radius: 10px; /* 모서리 둥글게 */
+    background-color: #1C1C1E; /* 비활성화 색상 */
+    color: #fff;
+    font-size: 1em;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 색상 전환 애니메이션 */
+}
+
+.tab-button.active {
+    background-color: #32ADE6; /* 활성화 색상 */
+    font-weight: bold;
+}
+
+.top-today-button,
+.top-tomorrow-button,
+.top-plus-button {
+    color: #fff;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.top-plus-button img {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+}
+
+/* ✅ 입력 필드 */
+#name-container,
+#explanation-container {
+    margin-top: 20px;
+}
+
+label {
+    color: #32ADE6;
+}
+
+#name-container input {
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px;
+    border: none;
+    color: #fff;
+    background-color: #1e1e1e;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#explanation-container textarea {
+    width: 100%;
+    height: 200px;
+    margin-top: 5px;
+    padding: 8px;
+    border: none;
+    color: #fff;
+    background-color: #1e1e1e;
+    border-radius: 5px;
+    resize: none;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* ✅ 버튼 컨테이너 */
+
+/* ✅ 헤더 삭제 버튼 (아이콘만 표시, 배경 투명) */
+.icon-button {
+    background: transparent; /* 배경 투명 */
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button img {
+    width: 24px;
+    height: 24px;
+    filter: invert(1); /* 아이콘 색상을 흰색으로 설정 */
+    transition: transform 0.2s ease;
+}
+
+.icon-button:hover img {
+    transform: scale(1.1); /* 호버 시 아이콘 확대 */
+}
+
+#button-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.action-button {
+    width: 150px;
+    height: 40px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #32ADE6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-button img.button-icon {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+}
+
+.action-button:hover {
+    background-color: #239abf;
+}
+
+/* ✅ 모달 팝업 */
+.modal {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.modal .modal-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: #000;
+    border: 3px solid #fff;
+    border-radius: 20px;
+    color: #fff;
+    text-align: center;
+}
+
+.deletion-btn,
+.cancel-btn {
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #32ADE6;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.deletion-btn:hover,
+.cancel-btn:hover {
+    background-color: #239abf;
+}
+
+.modal.on {
+    display: block;
+}
