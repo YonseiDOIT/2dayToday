@@ -168,3 +168,14 @@ document.querySelector('.deletion-btn').onclick = () => {
 document.querySelector('.cancel-btn').onclick = () => {
     document.querySelector('.modal').classList.remove('on');
 };
+
+/* ✅ 스위치 */
+// 스위치 상태 확인
+const switchElement = document.getElementById('mySwitch');
+switchElement.addEventListener('change', function() {
+    if (switchElement.checked) {
+        console.log('일정 미루기 설정');
+    } else {
+        console.log('일정 미루기 설정 취소');
+    }
+});
