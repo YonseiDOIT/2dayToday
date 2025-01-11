@@ -66,6 +66,7 @@ function handleSwipeGesture() {
     }
 }
 
+
 // ✅ 일정 로드
 function loadTasks() {
     const taskList = document.getElementById('task-list');
@@ -84,26 +85,39 @@ function loadTasks() {
         originalIndex: index,
     })).filter(task => {
         const taskDate = task.date.split('T')[0];
-        return activeTab === 'today' ? taskDate === todayDate : taskDate === tomorrowDate;
+
+        // ✅ 오늘 일정
+        if (activeTab === 'today' && taskDate === todayDate) {
+            return true;
+        }
+
+        // ✅ 내일 일정
+        if (activeTab === 'tomorrow' && taskDate === tomorrowDate) {
+            return true;
+        }
+
+        // ✅ 과거의 완료되지 않은 일정
+        if (activeTab === 'today' && new Date(taskDate) < today && !task.completed) {
+            return true;
+        }
+
+        return false;
     });
 
     filteredTasks.forEach((task) => {
         const li = document.createElement('li');
         if (task.completed) li.classList.add('completed');
 
-        // ✅ 체크박스 (커스텀 아이콘)
         const checkbox = document.createElement('div');
         checkbox.className = `custom-checkbox ${task.completed ? 'checked' : ''}`;
         checkbox.onclick = () => toggleCompletion(task.originalIndex, !task.completed);
         li.appendChild(checkbox);
 
-        // ✅ 일정 이름
         const taskText = document.createElement('span');
         taskText.textContent = `${task.name}`;
         taskText.className = `task-text ${task.completed ? 'completed' : ''}`;
         li.appendChild(taskText);
 
-        // ✅ 수정 버튼
         const editButton = document.createElement('button');
         editButton.className = 'edit-button';
         editButton.onclick = () => editTask(task.originalIndex);
@@ -119,6 +133,7 @@ function loadTasks() {
         taskList.appendChild(li);
     });
 }
+
 
 // ✅ 완료 상태 변경
 function toggleCompletion(index, isCompleted) {
