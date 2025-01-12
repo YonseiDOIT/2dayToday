@@ -115,6 +115,12 @@ body {
     color: #bbb; /* 흐린 텍스트 색상 */
 }
 
+/* ✅ 과거 일정 스타일 */
+.past-task {
+    background-color: #FF9500 !important;  /* 주황색 */
+    color: #fff;
+}
+
 /* ✅ 체크박스 커스터마이징 */
 #task-list li .custom-checkbox {
     width: 24px;

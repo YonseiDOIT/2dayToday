@@ -26,42 +26,51 @@ function loadInputFromTempStorage() {
     if (tempDesc !== null) descInput.value = tempDesc;
 }
 
+//한국 날짜 설정 관련
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');  // 두 자리 수로 변환
+    const day = String(date.getDate()).padStart(2, '0');         // 두 자리 수로 변환
+    return `${year}-${month}-${day}`;
+}
 // ✅ 초기 활성 탭 설정 (ID 기반)
 window.onload = () => {
-    const editId = localStorage.getItem('editId');  // ✅ editIndex → editId
+    const editId = localStorage.getItem('editId');
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const taskTitle = document.getElementById('task-title');
 
     if (editId !== null) {
-        const task = tasks.find(t => t.id === editId);  // ✅ ID로 찾기
+        const task = tasks.find(t => t.id === editId);
 
         if (task) {
             nameInput.value = task.name || '';
             descInput.value = task.description || '';
             taskTitle.textContent = task.name || '일정 수정';
 
-            // ✅ 기존 일정의 날짜에 따라 탭 활성화
-            const taskDate = task.date.split('T')[0];
-            const todayDate = new Date().toISOString().split('T')[0];
+            // ✅ 날짜 비교 수정
+            const taskDate = task.date;
+            const todayDate = formatDate(new Date());
             const tomorrow = new Date();
             tomorrow.setDate(new Date().getDate() + 1);
-            const tomorrowDate = tomorrow.toISOString().split('T')[0];
+            const tomorrowDate = formatDate(tomorrow);
 
+            // ✅ 탭 활성화 수정
             if (taskDate === todayDate) {
-                switchTab('today');
+                document.getElementById('today-tab').classList.add('active');
+                document.getElementById('tomorrow-tab').classList.remove('active');
             } else if (taskDate === tomorrowDate) {
-                switchTab('tomorrow');
+                document.getElementById('tomorrow-tab').classList.add('active');
+                document.getElementById('today-tab').classList.remove('active');
             }
         }
     } else {
-        // ✅ 새 일정 추가 시 탭 활성화
-        const newTaskTab = localStorage.getItem('newTaskTab');
-        switchTab(newTaskTab || 'today');  // 기본값 '오늘'
+        switchTab(localStorage.getItem('newTaskTab') || 'today');
         taskTitle.textContent = '새 일정 추가';
     }
 
-    loadInputFromTempStorage();  // ✅ 임시 저장된 입력값 복원
+    loadInputFromTempStorage();
 };
+
 
 
 // ✅ 날짜별 일정 불러오기 (ID 기반)

@@ -66,7 +66,13 @@ function handleSwipeGesture() {
     }
 }
 
-
+//날짜 포맷팅 관련
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');  // 두 자리 수로 변환
+    const day = String(date.getDate()).padStart(2, '0');         // 두 자리 수로 변환
+    return `${year}-${month}-${day}`;
+}
 // 일정 로드
 function loadTasks() {
     const taskList = document.getElementById('task-list');
@@ -77,11 +83,12 @@ function loadTasks() {
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
 
-    const todayDate = today.toISOString().split('T')[0];
-    const tomorrowDate = tomorrow.toISOString().split('T')[0];
+    // ✅ formatDate로 한국 시간 기준 날짜 생성
+    const todayDate = formatDate(today);
+    const tomorrowDate = formatDate(tomorrow);
 
     const filteredTasks = tasks.filter(task => {
-        const taskDate = task.date.split('T')[0];
+        const taskDate = task.date;
         if (activeTab === 'today' && taskDate === todayDate) return true;
         if (activeTab === 'tomorrow' && taskDate === tomorrowDate) return true;
         if (activeTab === 'today' && new Date(taskDate) < today && !task.completed) return true;
@@ -182,19 +189,30 @@ function generateId() {
     return Date.now().toString() + Math.random().toString(36).substr(2, 9);
 }
 
-// 일정 추가 페이지로 이동
+
 function addTaskAndRedirect() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    // ✅ 현재 활성화된 탭에 따라 날짜 설정
+    let taskDate;
+    if (activeTab === 'today') {
+        taskDate = formatDate(new Date());  // 오늘 날짜
+    } else if (activeTab === 'tomorrow') {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        taskDate = formatDate(tomorrow);    // 내일 날짜
+    }
+
     const randomTask = {
         id: generateId(),
         name: '새 일정',
         description: '',
-        date: new Date().toISOString().split('T')[0],
+        date: taskDate,  // ✅ 활성화된 탭에 따라 날짜 설정
         completed: false
     };
 
     tasks.push(randomTask);
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    localStorage.setItem('editId', newTask.id);
+    localStorage.setItem('editId', randomTask.id);
     window.location.href = './tasks.html';
 }
