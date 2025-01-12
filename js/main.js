@@ -23,7 +23,7 @@ function initializePage() {
     loadTasks();
 }
 
-// ✅ 스와이프 기능 추가 
+// [스와이프 관련 로직]
 //  기본 브라우저 스와이프 비활성화
 let touchStartX = 0;
 let touchEndX = 0;
@@ -67,7 +67,7 @@ function handleSwipeGesture() {
 }
 
 
-// ✅ 일정 로드
+// 일정 로드
 function loadTasks() {
     const taskList = document.getElementById('task-list');
     taskList.innerHTML = ''; 
@@ -104,13 +104,19 @@ function loadTasks() {
         return false;
     });
 
+    // ✅ 전체 li 클릭 시 편집 페이지로 이동하도록 수정
     filteredTasks.forEach((task) => {
         const li = document.createElement('li');
         if (task.completed) li.classList.add('completed');
 
+        li.onclick = () => editTask(task.originalIndex); // 전체 li 클릭 시 편집 페이지로 이동
+
         const checkbox = document.createElement('div');
         checkbox.className = `custom-checkbox ${task.completed ? 'checked' : ''}`;
-        checkbox.onclick = () => toggleCompletion(task.originalIndex, !task.completed);
+        checkbox.onclick = (e) => {
+            e.stopPropagation();  // 체크박스 클릭 시 편집 방지
+            toggleCompletion(task.originalIndex, !task.completed);  // 완료 상태 토글
+        };
         li.appendChild(checkbox);
 
         const taskText = document.createElement('span');
@@ -120,7 +126,10 @@ function loadTasks() {
 
         const editButton = document.createElement('button');
         editButton.className = 'edit-button';
-        editButton.onclick = () => editTask(task.originalIndex);
+        editButton.onclick = (e) => {
+            e.stopPropagation();  // 버튼 클릭 시 이벤트 중단
+            editTask(task.originalIndex);
+        };
 
         const editIcon = document.createElement('img');
         editIcon.src = 'assets/images/more_vert.svg';
@@ -132,6 +141,7 @@ function loadTasks() {
 
         taskList.appendChild(li);
     });
+    
 }
 
 
