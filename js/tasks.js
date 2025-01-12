@@ -73,25 +73,25 @@ window.onload = () => {
 
 
 
-// ✅ 날짜별 일정 불러오기 (ID 기반)
+// ✅ 날짜별 일정 불러오기 (ID 기반) - 수정
 function loadTasksForDate(tab) {
-    const editId = localStorage.getItem('editId');  // ✅ editIndex → editId
+    const editId = localStorage.getItem('editId');
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
     if (editId !== null) {
-        const task = tasks.find(t => t.id === editId);  // ✅ ID로 찾기
+        const task = tasks.find(t => t.id === editId);
 
         if (task) {
             const today = new Date();
             const tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1);
 
-            const todayDate = today.toISOString().split('T')[0];
-            const tomorrowDate = tomorrow.toISOString().split('T')[0];
+            const todayDate = formatDate(today);       // ✅ formatDate로 변경 (KST 기준)
+            const tomorrowDate = formatDate(tomorrow); // ✅ formatDate로 변경 (KST 기준)
 
-            if (tab === 'today' && task.date.split('T')[0] !== todayDate) {
-                task.date = todayDate;
-            } else if (tab === 'tomorrow' && task.date.split('T')[0] !== tomorrowDate) {
+            if (tab === 'today' && task.date !== todayDate) {
+                task.date = todayDate;  // ✅ 한국 시간 기준으로 저장
+            } else if (tab === 'tomorrow' && task.date !== tomorrowDate) {
                 task.date = tomorrowDate;
             }
 
@@ -126,7 +126,7 @@ cancelButton.onclick = () => {
     window.history.back(); // 이전 페이지로 이동
 };
 
-// ✅ 저장 기능 (ID 기반)
+// ✅ 저장 기능 (ID 기반) - 수정
 editButton.onclick = () => {
     const editId = localStorage.getItem('editId');  // ✅ editIndex → editId
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
@@ -142,12 +142,14 @@ editButton.onclick = () => {
                 description: descInput.value
             };
 
-            // ✅ 선택된 탭에 따라 날짜 업데이트
-            const today = new Date().toISOString().split('T')[0];
+            // ✅ 선택된 탭에 따라 날짜 업데이트 (formatDate 적용)
+            const today = formatDate(new Date());
             const tomorrow = new Date();
             tomorrow.setDate(new Date().getDate() + 1);
 
-            tasks[taskIndex].date = todayTab.classList.contains('active') ? today : tomorrow.toISOString().split('T')[0];
+            tasks[taskIndex].date = todayTab.classList.contains('active') 
+                ? today 
+                : formatDate(tomorrow);  // ✅ formatDate로 수정
 
             localStorage.removeItem('tempName');
             localStorage.removeItem('tempDesc');
@@ -155,7 +157,7 @@ editButton.onclick = () => {
             window.location.href = 'index.html';
         }
     }
-};
+}
 
 
 // 모달 삭제 버튼 동작 관련
