@@ -80,42 +80,26 @@ function loadTasks() {
     const todayDate = today.toISOString().split('T')[0];
     const tomorrowDate = tomorrow.toISOString().split('T')[0];
 
-    const filteredTasks = tasks.map((task, index) => ({
-        ...task,
-        originalIndex: index,
-    })).filter(task => {
+    const filteredTasks = tasks.filter(task => {
         const taskDate = task.date.split('T')[0];
-
-        // ✅ 오늘 일정
-        if (activeTab === 'today' && taskDate === todayDate) {
-            return true;
-        }
-
-        // ✅ 내일 일정
-        if (activeTab === 'tomorrow' && taskDate === tomorrowDate) {
-            return true;
-        }
-
-        // ✅ 과거의 완료되지 않은 일정
-        if (activeTab === 'today' && new Date(taskDate) < today && !task.completed) {
-            return true;
-        }
-
+        if (activeTab === 'today' && taskDate === todayDate) return true;
+        if (activeTab === 'tomorrow' && taskDate === tomorrowDate) return true;
+        if (activeTab === 'today' && new Date(taskDate) < today && !task.completed) return true;
         return false;
     });
 
-    // ✅ 전체 li 클릭 시 편집 페이지로 이동하도록 수정
+    // ✅ 전체 li 클릭 시 ID 기반으로 편집 페이지 이동
     filteredTasks.forEach((task) => {
         const li = document.createElement('li');
         if (task.completed) li.classList.add('completed');
 
-        li.onclick = () => editTask(task.originalIndex); // 전체 li 클릭 시 편집 페이지로 이동
+        li.onclick = () => editTask(task.id);  // ID로 연결
 
         const checkbox = document.createElement('div');
         checkbox.className = `custom-checkbox ${task.completed ? 'checked' : ''}`;
         checkbox.onclick = (e) => {
-            e.stopPropagation();  // 체크박스 클릭 시 편집 방지
-            toggleCompletion(task.originalIndex, !task.completed);  // 완료 상태 토글
+            e.stopPropagation();
+            toggleCompletion(task.id, !task.completed);  // ID 기반 완료 처리
         };
         li.appendChild(checkbox);
 
@@ -127,8 +111,8 @@ function loadTasks() {
         const editButton = document.createElement('button');
         editButton.className = 'edit-button';
         editButton.onclick = (e) => {
-            e.stopPropagation();  // 버튼 클릭 시 이벤트 중단
-            editTask(task.originalIndex);
+            e.stopPropagation();
+            editTask(task.id);
         };
 
         const editIcon = document.createElement('img');
@@ -141,22 +125,31 @@ function loadTasks() {
 
         taskList.appendChild(li);
     });
-    
 }
 
 
 // ✅ 완료 상태 변경
-function toggleCompletion(index, isCompleted) {
+function toggleCompletion(id, isCompleted) {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    tasks[index].completed = isCompleted;
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    loadTasks();
+    console.log('전달된 ID:', id);  // ID 확인
+    console.log('현재 tasks:', tasks);  // 저장된 tasks 확인
+
+    const task = tasks.find(t => t.id === id);  // ID로 찾기
+
+    if (task) {
+        console.log('찾은 Task:', task);  // task 확인
+        task.completed = isCompleted;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        loadTasks();
+    } else {
+        console.error('일치를 찾지 못했습니다.');
+    }
 }
 
 
 // 일정 수정
-function editTask(originalIndex) {
-    localStorage.setItem('editIndex', originalIndex);
+function editTask(id) {
+    localStorage.setItem('editId', id);
     window.location.href = './tasks.html';
 }
 
@@ -183,10 +176,17 @@ function switchTab(tab) {
         todayButton.classList.add('disabled'); // 오늘 버튼 비활성화
     }
 }
+
+//id 생성
+function generateId() {
+    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+}
+
 // 일정 추가 페이지로 이동
 function addTaskAndRedirect() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const randomTask = {
+        id: generateId(),
         name: '새 일정',
         description: '',
         date: new Date().toISOString().split('T')[0],
@@ -195,6 +195,6 @@ function addTaskAndRedirect() {
 
     tasks.push(randomTask);
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    localStorage.setItem('editIndex', tasks.length - 1);
+    localStorage.setItem('editId', newTask.id);
     window.location.href = './tasks.html';
 }
