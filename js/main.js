@@ -73,17 +73,17 @@ function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');         // 두 자리 수로 변환
     return `${year}-${month}-${day}`;
 }
-// 일정 로드
+
+// ✅ 일정 로드 (과거 일정 색상 변경)
 function loadTasks() {
     const taskList = document.getElementById('task-list');
-    taskList.innerHTML = ''; 
+    taskList.innerHTML = '';
 
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
 
-    // ✅ formatDate로 한국 시간 기준 날짜 생성
     const todayDate = formatDate(today);
     const tomorrowDate = formatDate(tomorrow);
 
@@ -95,18 +95,29 @@ function loadTasks() {
         return false;
     });
 
-    // ✅ 전체 li 클릭 시 ID 기반으로 편집 페이지 이동
-    filteredTasks.forEach((task) => {
+    let draggedItem = null;
+    let longPressTimer;
+
+    filteredTasks.forEach((task, index) => {
         const li = document.createElement('li');
+        li.setAttribute('draggable', true); // ✅ 드래그 활성화
+
+        const taskDateObj = new Date(task.date);
+        const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        if (taskDateObj < todayDateOnly && !task.completed) {
+            li.style.backgroundColor = '#FF9500';
+        }
+
         if (task.completed) li.classList.add('completed');
 
-        li.onclick = () => editTask(task.id);  // ID로 연결
+        li.onclick = () => editTask(task.id);
 
         const checkbox = document.createElement('div');
         checkbox.className = `custom-checkbox ${task.completed ? 'checked' : ''}`;
         checkbox.onclick = (e) => {
             e.stopPropagation();
-            toggleCompletion(task.id, !task.completed);  // ID 기반 완료 처리
+            toggleCompletion(task.id, !task.completed);
         };
         li.appendChild(checkbox);
 
@@ -130,21 +141,98 @@ function loadTasks() {
         editButton.appendChild(editIcon);
         li.appendChild(editButton);
 
+        // ✅ PC용 드래그 앤 드롭
+        li.addEventListener('dragstart', (e) => {
+            draggedItem = li;
+            setTimeout(() => li.style.opacity = '0.5', 0);
+        });
+
+        li.addEventListener('dragend', () => {
+            li.style.opacity = '1';
+            draggedItem = null;
+        });
+
+        li.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        li.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (draggedItem !== li) {
+                swapTasks(taskList, draggedItem, li);
+                updateTaskOrder();
+            }
+        });
+
+        // ✅ 모바일용 길게 누르기 드래그
+        li.addEventListener('touchstart', (e) => {
+            longPressTimer = setTimeout(() => {
+                draggedItem = li;
+                li.style.opacity = '0.5';
+            }, 500); // 0.5초 이상 누르면 활성화
+        });
+
+        li.addEventListener('touchend', () => {
+            clearTimeout(longPressTimer);
+            if (draggedItem) {
+                draggedItem.style.opacity = '1';
+                draggedItem = null;
+            }
+        });
+
+        li.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (draggedItem && target && target.tagName === 'LI' && target !== draggedItem) {
+                swapTasks(taskList, draggedItem, target);
+                updateTaskOrder();
+            }
+        });
+
         taskList.appendChild(li);
     });
 }
+// ✅ 드래그 순서 바꾸기
+function swapTasks(taskList, item1, item2) {
+    const items = Array.from(taskList.children);
+    const index1 = items.indexOf(item1);
+    const index2 = items.indexOf(item2);
+
+    if (index1 < index2) {
+        taskList.insertBefore(item2, item1);
+    } else {
+        taskList.insertBefore(item1, item2);
+    }
+}
+
+// ✅ LocalStorage 순서 업데이트
+function updateTaskOrder() {
+    const updatedTasks = [];
+    const taskListItems = document.querySelectorAll('#task-list li');
+
+    taskListItems.forEach((li) => {
+        // ✅ data-id 속성으로 ID를 안전하게 가져오기
+        const taskId = li.getAttribute('data-id');  
+
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const task = tasks.find(t => t.id === taskId);
+        if (task) {
+            updatedTasks.push(task);
+        }
+    });
+
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+}
+
 
 
 // ✅ 완료 상태 변경
 function toggleCompletion(id, isCompleted) {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    console.log('전달된 ID:', id);  // ID 확인
-    console.log('현재 tasks:', tasks);  // 저장된 tasks 확인
-
     const task = tasks.find(t => t.id === id);  // ID로 찾기
 
     if (task) {
-        console.log('찾은 Task:', task);  // task 확인
         task.completed = isCompleted;
         localStorage.setItem('tasks', JSON.stringify(tasks));
         loadTasks();
