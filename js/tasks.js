@@ -26,65 +26,72 @@ function loadInputFromTempStorage() {
     if (tempDesc !== null) descInput.value = tempDesc;
 }
 
-// ✅ 초기 활성 탭 설정
+//한국 날짜 설정 관련
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');  // 두 자리 수로 변환
+    const day = String(date.getDate()).padStart(2, '0');         // 두 자리 수로 변환
+    return `${year}-${month}-${day}`;
+}
+// ✅ 초기 활성 탭 설정 (ID 기반)
 window.onload = () => {
-    const editIndex = localStorage.getItem('editIndex');
+    const editId = localStorage.getItem('editId');
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const taskTitle = document.getElementById('task-title');
 
-    if (editIndex !== null && tasks[editIndex]) {
-        const task = tasks[editIndex];
-        nameInput.value = task.name || '';
-        descInput.value = task.description || '';
-        taskTitle.textContent = task.name || '일정 수정';
+    if (editId !== null) {
+        const task = tasks.find(t => t.id === editId);
 
-        // 기존 일정의 날짜에 따라 탭 활성화
-        const taskDate = task.date.split('T')[0];
-        const todayDate = new Date().toISOString().split('T')[0];
-        const tomorrow = new Date();
-        tomorrow.setDate(new Date().getDate() + 1);
-        const tomorrowDate = tomorrow.toISOString().split('T')[0];
+        if (task) {
+            nameInput.value = task.name || '';
+            descInput.value = task.description || '';
+            taskTitle.textContent = task.name || '일정 수정';
 
-        if (taskDate === todayDate) {
-            switchTab('today');
-        } else if (taskDate === tomorrowDate) {
-            switchTab('tomorrow');
+            // ✅ 날짜 비교 수정
+            const taskDate = task.date;
+            const todayDate = formatDate(new Date());
+            const tomorrow = new Date();
+            tomorrow.setDate(new Date().getDate() + 1);
+            const tomorrowDate = formatDate(tomorrow);
+
+            // ✅ 탭 활성화 수정
+            if (taskDate === todayDate) {
+                document.getElementById('today-tab').classList.add('active');
+                document.getElementById('tomorrow-tab').classList.remove('active');
+            } else if (taskDate === tomorrowDate) {
+                document.getElementById('tomorrow-tab').classList.add('active');
+                document.getElementById('today-tab').classList.remove('active');
+            }
         }
     } else {
-        // ✅ 새 일정 추가 시 탭 활성화
-        const newTaskTab = localStorage.getItem('newTaskTab');
-        if (newTaskTab === 'today') {
-            switchTab('today');
-        } else if (newTaskTab === 'tomorrow') {
-            switchTab('tomorrow');
-        } else {
-            switchTab('today'); // 기본값은 '오늘'
-        }
+        switchTab(localStorage.getItem('newTaskTab') || 'today');
         taskTitle.textContent = '새 일정 추가';
     }
-    
-    // 임시 저장된 입력값 복원
+
     loadInputFromTempStorage();
 };
 
-// ✅ 날짜별 일정 불러오기
+
+
+// ✅ 날짜별 일정 불러오기 (ID 기반) - 수정
 function loadTasksForDate(tab) {
-    const editIndex = localStorage.getItem('editIndex');
+    const editId = localStorage.getItem('editId');
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-    if (editIndex !== null) {
-        const task = tasks[editIndex];
+    if (editId !== null) {
+        const task = tasks.find(t => t.id === editId);
+
         if (task) {
             const today = new Date();
             const tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1);
 
-            const todayDate = today.toISOString().split('T')[0];
-            const tomorrowDate = tomorrow.toISOString().split('T')[0];
+            const todayDate = formatDate(today);       // ✅ formatDate로 변경 (KST 기준)
+            const tomorrowDate = formatDate(tomorrow); // ✅ formatDate로 변경 (KST 기준)
 
-            if (tab === 'today' && task.date.split('T')[0] !== todayDate) {
-                task.date = todayDate;
-            } else if (tab === 'tomorrow' && task.date.split('T')[0] !== tomorrowDate) {
+            if (tab === 'today' && task.date !== todayDate) {
+                task.date = todayDate;  // ✅ 한국 시간 기준으로 저장
+            } else if (tab === 'tomorrow' && task.date !== tomorrowDate) {
                 task.date = tomorrowDate;
             }
 
@@ -92,6 +99,7 @@ function loadTasksForDate(tab) {
         }
     }
 }
+
 
 // ✅ 탭 전환
 function switchTab(tab) {
@@ -118,53 +126,57 @@ cancelButton.onclick = () => {
     window.history.back(); // 이전 페이지로 이동
 };
 
-// ✅ 저장 기능
+// ✅ 저장 기능 (ID 기반) - 수정
 editButton.onclick = () => {
-    const editIndex = localStorage.getItem('editIndex');
+    const editId = localStorage.getItem('editId');  // ✅ editIndex → editId
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const todayTab = document.getElementById('today-tab');
 
-    if (editIndex !== null) {
-        const task = tasks[editIndex];
+    if (editId !== null) {
+        const taskIndex = tasks.findIndex(t => t.id === editId);  // ✅ ID로 인덱스 찾기
 
-        tasks[editIndex] = {
-            name: nameInput.value,
-            description: descInput.value,
-            date: task.date, // 기존 날짜 유지
-            completed: task.completed || false
-        };
+        if (taskIndex !== -1) {
+            tasks[taskIndex] = {
+                ...tasks[taskIndex],
+                name: nameInput.value,
+                description: descInput.value
+            };
 
-        // 현재 선택된 탭에 따라 날짜 업데이트
-        if (todayTab.classList.contains('active')) {
-            const today = new Date().toISOString().split('T')[0];
-            tasks[editIndex].date = today; // '오늘' 탭 선택 시 오늘 날짜로 설정
-        } else {
+            // ✅ 선택된 탭에 따라 날짜 업데이트 (formatDate 적용)
+            const today = formatDate(new Date());
             const tomorrow = new Date();
             tomorrow.setDate(new Date().getDate() + 1);
-            tasks[editIndex].date = tomorrow.toISOString().split('T')[0]; // '내일' 탭 선택 시 내일 날짜로 설정
-        }
 
-        localStorage.removeItem('tempName');
-        localStorage.removeItem('tempDesc');
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        window.location.href = 'index.html';
+            tasks[taskIndex].date = todayTab.classList.contains('active') 
+                ? today 
+                : formatDate(tomorrow);  // ✅ formatDate로 수정
+
+            localStorage.removeItem('tempName');
+            localStorage.removeItem('tempDesc');
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            window.location.href = 'index.html';
+        }
     }
-};
+}
+
 
 // 모달 삭제 버튼 동작 관련
 deleteButton.onclick = () => {
     document.querySelector('.modal').classList.add('on');
 };
+// ✅ 삭제 기능 (ID 기반)
 document.querySelector('.deletion-btn').onclick = () => {
-    const editIndex = localStorage.getItem('editIndex');
+    const editId = localStorage.getItem('editId');  // ✅ editIndex → editId
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    if (editIndex !== null) {
-        tasks.splice(editIndex, 1);
+
+    if (editId !== null) {
+        tasks = tasks.filter(task => task.id !== editId);  // ✅ ID로 삭제
         localStorage.setItem('tasks', JSON.stringify(tasks));
-        localStorage.removeItem('editIndex');
+        localStorage.removeItem('editId');
         window.location.href = 'index.html';
     }
 };
+
 document.querySelector('.cancel-btn').onclick = () => {
     document.querySelector('.modal').classList.remove('on');
 };
