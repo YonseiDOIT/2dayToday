@@ -17,26 +17,38 @@
                 <img src="assets/images/delete_forever.svg" alt="Delete Icon" class="button-icon">
             </button>
         </div>
-        <div id="top-container">
+
+        <!-- '오늘', '내일' 탭 -->
+        <div id="top-container" style="display: none;">
             <button id="today-tab" class="tab-button active" onclick="switchTab('today')">오늘</button>
             <button id="tomorrow-tab" class="tab-button" onclick="switchTab('tomorrow')">내일</button>
         </div>
-        <label class="switch">
-            <input type="checkbox" id="mySwitch">
-            <span class="slider"></span>
-        </label>
+
+        <!-- 미루기 버튼 -->
+        <div id="delay-container" style="display: none;">
+            <label class="switch">
+                <input type="checkbox" id="mySwitch" onchange="toggleDelay()">
+                <span class="slider"></span>
+            </label>
             <span class="switch-label">일정 미루기</span>
+        </div>
+
+        <!-- 일정명 입력 -->
         <div id="name-container">
             <label for="task-name">일정명</label>
             <input id="task-name" type="text" placeholder="일정명을 입력하세요">
         </div>
+
+        <!-- 설명 입력 -->
         <div id="explanation-container">
             <label for="task-desc">설명</label>
             <textarea id="task-desc" placeholder="설명을 입력하세요"></textarea>
         </div>
+
+        <!-- 취소 및 저장 버튼 -->
         <div id="button-container">
             <button id="cancel-button" class="action-button">
-                <img src="assets\images\cancel.svg" alt="Delete Icon" class="button-icon"> 취소
+                <img src="assets/images/cancel.svg" alt="Delete Icon" class="button-icon"> 취소
             </button>
             <button id="edit-button" class="action-button">
                 <img src="assets/images/check_circle.svg" alt="Save Icon" class="button-icon"> 저장
@@ -55,5 +67,76 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // 페이지 로드 시 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            const editId = localStorage.getItem('editId');
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const task = tasks.find(t => t.id === editId);
+
+            if (task) {
+                initializePage(task);
+            } else {
+                console.error("일치를 찾을 수 없습니다.");
+            }
+        });
+
+                // 페이지 초기화
+        function initializePage(task) {
+            // 기본 값 설정
+            const taskTitle = document.getElementById('task-title');
+            const taskNameLabel = document.querySelector("label[for='task-name']");
+            const taskDescLabel = document.querySelector("label[for='task-desc']");
+            const delayContainer = document.getElementById('delay-container');
+            const topContainer = document.getElementById('top-container');
+            const mySwitch = document.getElementById('mySwitch');
+
+            taskTitle.textContent = task.name || "일정 수정";
+            document.getElementById('task-name').value = task.name || "";
+            document.getElementById('task-desc').value = task.description || "";
+
+            // delayed 옵션에 따라 UI 동적 처리
+            if (task.delayed) {
+                // 미뤄진 일정인 경우
+                delayContainer.style.display = "block";
+                topContainer.style.display = "none";
+                mySwitch.checked = false; // 미뤄짐 표시
+
+                // ✅ 일정명, 설명 라벨 색상 변경
+                taskNameLabel.style.color = "#FF9500";
+                taskDescLabel.style.color = "#FF9500";
+            } else {
+                // 미뤄지지 않은 일정인 경우
+                delayContainer.style.display = "none";
+                topContainer.style.display = "flex";
+                mySwitch.checked = true; // 미뤄지지 않음
+
+                // ✅ 일정명, 설명 라벨 색상 초기화
+                taskTitle.style.color = "";
+                taskNameLabel.style.color = "";
+                taskDescLabel.style.color = "";
+            }
+        }
+
+
+        // 미루기 상태 변경
+        function toggleDelay() {
+            const editId = localStorage.getItem('editId');
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const task = tasks.find(t => t.id === editId);
+
+            if (task) {
+                task.delayed = !task.delayed; // delayed 상태 토글
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                initializePage(task); // UI 업데이트
+            }
+        }
+
+        // 뒤로 가기 버튼
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </body>
 </html>
