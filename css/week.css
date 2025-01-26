@@ -104,6 +104,14 @@ body {
         justify-content: center; /* 세로 가운데 정렬 */
         align-items: center; /* 가로 가운데 정렬 */
     }
+    
+    .common-container {
+        padding: 2px; /* 바깥 여백 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* 세로 가운데 정렬 */
+        align-items: center; /* 가로 가운데 정렬 */
+    }
     .top {
         width: 100%;
         display: flex;
