@@ -22,7 +22,12 @@ body {
     overflow-y: auto;
 }
 
-/* ✅ 날짜 및 네비게이션 */
+/* ✅ top(날짜 및 네비게이션, week 버튼) */
+.top {
+    display: flex;
+    flex-direction: row;
+    gap: 40%;
+}
 #main-date-container {
     color: #fff;
     margin: 10px 12px
@@ -33,6 +38,16 @@ body {
     align-items: center;
     justify-content: flex-start; /* 왼쪽 정렬 */
     gap: 0; /* gap 제거 */
+}
+.top button {
+    color: #fff;
+    background-color: transparent;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* ✅ 오늘/내일 버튼 공통 스타일 */
@@ -159,37 +174,121 @@ body {
 /* ✅ 미디어 쿼리 적용 */
 
 /* 기본 화면 최적화(360 x 640 (16:9)) */
-@media (max-width: 360px) and (max-height: 640px) {
-    body {
-        font-size: 14px;
+@media screen and (max-width: 360px) and (max-height: 640px) {
+    /* 공통 컨테이너 */
+    body, .common-container {
+        padding: 6px; /* 약간의 여백 추가 */
+        overflow-y: auto; /* 스크롤 허용 */
+        background-color: #000; /* 기본 배경 유지 */
     }
 
-    .top-today-button,
-    .top-tomorrow-button {
-        font-size: 14px;
+    .top {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between; /* 요소 간 최대 간격 유지 */
+        gap: 15%; /* 간격 축소 */
+        flex-wrap: nowrap; /* 한 줄로 유지 */
+    }
+
+    #main-date-container {
+        font-size: 14px; /* 텍스트 크기 소폭 축소 */
+        margin: 8px; /* 여백 조정 */
+    }
+
+    .top button {
+        font-size: 1em; /* 버튼 텍스트 크기 유지 */
+        padding: 6px 10px; /* 여백 축소 */
+    }
+
+    .top-plus-button {
+        text-align: center; /* 중앙 정렬 */
+    }
+
+    .top-plus-button img {
+        width: 22px;
+        height: 22px; /* 아이콘 크기 소폭 축소 */
+    }
+
+    /* 스케줄 컨테이너 */
+    #schedule-container {
+        max-height: calc(100vh - 180px); /* 스케줄 높이 조정 */
+        padding: 5px; /* 내부 여백 */
+        overflow-y: auto; /* 스크롤 허용 */
+    }
+
+    #task-list {
+        padding: 4px; /* 리스트 패딩 축소 */
     }
 
     #task-list li {
-        padding: 4px;
+        padding: 8px; /* 항목 패딩 */
+        font-size: 14px; /* 텍스트 크기 소폭 축소 */
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* 양쪽 정렬 유지 */
+    }
+
+    #task-list li .custom-checkbox {
+        width: 22px;
+        height: 22px; /* 체크박스 크기 */
+        margin-right: 8px;
+    }
+
+    #task-list li .task-text {
+        font-size: 14px; /* 텍스트 크기 유지 */
+        margin-left: 10px; /* 텍스트 여백 */
+    }
+
+    #task-list li .edit-button .edit-button-icon {
+        width: 22px;
+        height: 22px; /* 수정 버튼 아이콘 크기 */
+    }
+
+    /* 체크된 항목 스타일 */
+    #task-list li.completed {
+        background-color: #555; /* 체크된 항목 배경색 */
+    }
+
+    /* 오늘/내일 버튼 스타일 */
+    .top-today-button, .top-tomorrow-button {
+        font-size: 14px; /* 텍스트 크기 */
+        padding: 6px 8px; /* 버튼 여백 축소 */
     }
 }
 
+
 /* 추가 화면 최적화(390 x 844 (19.5:9)) */
-@media (max-width: 390px) and (max-height: 844px) {
-    body {
-        font-size: 16px;
-        max-width: 390px;
-        max-height: 844px;
+@media screen and (max-width: 390px) and (max-height: 844px) {
+    body, .common-container {
+        padding: 8px; /* 외부 여백 추가 */
     }
-
-    .top-today-button,
-    .top-tomorrow-button {
-        font-size: 15px;
-        padding: 10px;
+    .top {
+        gap: 40%; /* 요소 간 간격 조정 */
     }
-
+    #main-date-container {
+        font-size: 16px; /* 날짜 텍스트 크기 증가 */
+        margin: 12px 16px;
+    }
+    .top button {
+        font-size: 1.2em; /* 버튼 크기 유지 */
+    }
+    .top-today-button, .top-tomorrow-button {
+        font-size: 16px; /* 버튼 텍스트 크기 유지 */
+        padding: 10px 14px; /* 버튼 내부 여백 조정 */
+    }
+    #schedule-container {
+        max-height: calc(100vh - 220px); /* 스케줄 컨테이너 크기 조정 */
+    }
     #task-list li {
-        padding: 6px;
-        font-size: 15px;
+        padding: 6px; /* 리스트 항목 패딩 조정 */
+        font-size: 16px; /* 텍스트 크기 증가 */
+    }
+    #task-list li .custom-checkbox {
+        width: 24px;
+        height: 24px; /* 체크박스 크기 유지 */
+    }
+    #task-list li .edit-button .edit-button-icon {
+        width: 24px;
+        height: 24px; /* 수정 버튼 아이콘 크기 유지 */
     }
 }

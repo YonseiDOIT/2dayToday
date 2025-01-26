@@ -23,7 +23,7 @@ function initializePage() {
     loadTasks();
 }
 
-// ✅ 스와이프 기능 추가 
+// [스와이프 관련 로직]
 //  기본 브라우저 스와이프 비활성화
 let touchStartX = 0;
 let touchEndX = 0;
@@ -66,51 +66,59 @@ function handleSwipeGesture() {
     }
 }
 
+//날짜 포맷팅 관련
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');  // 두 자리 수로 변환
+    const day = String(date.getDate()).padStart(2, '0');         // 두 자리 수로 변환
+    return `${year}-${month}-${day}`;
+}
 
-// ✅ 일정 로드
+// ✅ 일정 로드 (과거 일정 색상 변경)
 function loadTasks() {
     const taskList = document.getElementById('task-list');
-    taskList.innerHTML = ''; 
+    taskList.innerHTML = '';
 
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
 
-    const todayDate = today.toISOString().split('T')[0];
-    const tomorrowDate = tomorrow.toISOString().split('T')[0];
+    const todayDate = formatDate(today);
+    const tomorrowDate = formatDate(tomorrow);
 
-    const filteredTasks = tasks.map((task, index) => ({
-        ...task,
-        originalIndex: index,
-    })).filter(task => {
-        const taskDate = task.date.split('T')[0];
-
-        // ✅ 오늘 일정
-        if (activeTab === 'today' && taskDate === todayDate) {
-            return true;
-        }
-
-        // ✅ 내일 일정
-        if (activeTab === 'tomorrow' && taskDate === tomorrowDate) {
-            return true;
-        }
-
-        // ✅ 과거의 완료되지 않은 일정
-        if (activeTab === 'today' && new Date(taskDate) < today && !task.completed) {
-            return true;
-        }
-
+    const filteredTasks = tasks.filter(task => {
+        const taskDate = task.date;
+        if (activeTab === 'today' && taskDate === todayDate) return true;
+        if (activeTab === 'tomorrow' && taskDate === tomorrowDate) return true;
+        if (activeTab === 'today' && new Date(taskDate) < today && !task.completed) return true;
         return false;
     });
 
-    filteredTasks.forEach((task) => {
+    let draggedItem = null;
+    let longPressTimer;
+
+    filteredTasks.forEach((task, index) => {
         const li = document.createElement('li');
+        li.setAttribute('draggable', true); // ✅ 드래그 활성화
+
+        const taskDateObj = new Date(task.date);
+        const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        if (taskDateObj < todayDateOnly && !task.completed) {
+            li.style.backgroundColor = '#FF9500';
+        }
+
         if (task.completed) li.classList.add('completed');
+
+        li.onclick = () => editTask(task.id);
 
         const checkbox = document.createElement('div');
         checkbox.className = `custom-checkbox ${task.completed ? 'checked' : ''}`;
-        checkbox.onclick = () => toggleCompletion(task.originalIndex, !task.completed);
+        checkbox.onclick = (e) => {
+            e.stopPropagation();
+            toggleCompletion(task.id, !task.completed);
+        };
         li.appendChild(checkbox);
 
         const taskText = document.createElement('span');
@@ -120,7 +128,10 @@ function loadTasks() {
 
         const editButton = document.createElement('button');
         editButton.className = 'edit-button';
-        editButton.onclick = () => editTask(task.originalIndex);
+        editButton.onclick = (e) => {
+            e.stopPropagation();
+            editTask(task.id);
+        };
 
         const editIcon = document.createElement('img');
         editIcon.src = 'assets/images/more_vert.svg';
@@ -130,23 +141,110 @@ function loadTasks() {
         editButton.appendChild(editIcon);
         li.appendChild(editButton);
 
+        // ✅ PC용 드래그 앤 드롭
+        li.addEventListener('dragstart', (e) => {
+            draggedItem = li;
+            setTimeout(() => li.style.opacity = '0.5', 0);
+        });
+
+        li.addEventListener('dragend', () => {
+            li.style.opacity = '1';
+            draggedItem = null;
+        });
+
+        li.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        li.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (draggedItem !== li) {
+                swapTasks(taskList, draggedItem, li);
+                updateTaskOrder();
+            }
+        });
+
+        // ✅ 모바일용 길게 누르기 드래그
+        li.addEventListener('touchstart', (e) => {
+            longPressTimer = setTimeout(() => {
+                draggedItem = li;
+                li.style.opacity = '0.5';
+            }, 500); // 0.5초 이상 누르면 활성화
+        });
+
+        li.addEventListener('touchend', () => {
+            clearTimeout(longPressTimer);
+            if (draggedItem) {
+                draggedItem.style.opacity = '1';
+                draggedItem = null;
+            }
+        });
+
+        li.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (draggedItem && target && target.tagName === 'LI' && target !== draggedItem) {
+                swapTasks(taskList, draggedItem, target);
+                updateTaskOrder();
+            }
+        });
+
         taskList.appendChild(li);
     });
 }
+// ✅ 드래그 순서 바꾸기
+function swapTasks(taskList, item1, item2) {
+    const items = Array.from(taskList.children);
+    const index1 = items.indexOf(item1);
+    const index2 = items.indexOf(item2);
+
+    if (index1 < index2) {
+        taskList.insertBefore(item2, item1);
+    } else {
+        taskList.insertBefore(item1, item2);
+    }
+}
+
+// ✅ LocalStorage 순서 업데이트
+function updateTaskOrder() {
+    const updatedTasks = [];
+    const taskListItems = document.querySelectorAll('#task-list li');
+
+    taskListItems.forEach((li) => {
+        // ✅ data-id 속성으로 ID를 안전하게 가져오기
+        const taskId = li.getAttribute('data-id');  
+
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const task = tasks.find(t => t.id === taskId);
+        if (task) {
+            updatedTasks.push(task);
+        }
+    });
+
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+}
+
 
 
 // ✅ 완료 상태 변경
-function toggleCompletion(index, isCompleted) {
+function toggleCompletion(id, isCompleted) {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    tasks[index].completed = isCompleted;
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    loadTasks();
+    const task = tasks.find(t => t.id === id);  // ID로 찾기
+
+    if (task) {
+        task.completed = isCompleted;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        loadTasks();
+    } else {
+        console.error('일치를 찾지 못했습니다.');
+    }
 }
 
 
 // 일정 수정
-function editTask(originalIndex) {
-    localStorage.setItem('editIndex', originalIndex);
+function editTask(id) {
+    localStorage.setItem('editId', id);
     window.location.href = './tasks.html';
 }
 
@@ -173,18 +271,36 @@ function switchTab(tab) {
         todayButton.classList.add('disabled'); // 오늘 버튼 비활성화
     }
 }
-// 일정 추가 페이지로 이동
+
+//id 생성
+function generateId() {
+    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+}
+
+
 function addTaskAndRedirect() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    // ✅ 현재 활성화된 탭에 따라 날짜 설정
+    let taskDate;
+    if (activeTab === 'today') {
+        taskDate = formatDate(new Date());  // 오늘 날짜
+    } else if (activeTab === 'tomorrow') {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        taskDate = formatDate(tomorrow);    // 내일 날짜
+    }
+
     const randomTask = {
+        id: generateId(),
         name: '새 일정',
         description: '',
-        date: new Date().toISOString().split('T')[0],
+        date: taskDate,  // ✅ 활성화된 탭에 따라 날짜 설정
         completed: false
     };
 
     tasks.push(randomTask);
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    localStorage.setItem('editIndex', tasks.length - 1);
+    localStorage.setItem('editId', randomTask.id);
     window.location.href = './tasks.html';
 }
