@@ -269,16 +269,25 @@ function updateTaskOrder() {
 // ✅ 완료 상태 변경
 function toggleCompletion(id, isCompleted) {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    const task = tasks.find(t => t.id === id);  // ID로 찾기
+    const taskIndex = tasks.findIndex(t => t.id === id);  // ID로 일정의 인덱스 찾기
 
-    if (task) {
+    if (taskIndex !== -1) {
+        const task = tasks[taskIndex];
         task.completed = isCompleted;
+
+        if (isCompleted) {
+            // ✅ 완료된 일정의 순서를 제일 아래로 이동
+            tasks.splice(taskIndex, 1); // 기존 위치에서 제거
+            tasks.push(task); // 제일 아래로 추가
+        }
+
         localStorage.setItem('tasks', JSON.stringify(tasks));
         loadTasks();
     } else {
         console.error('일치를 찾지 못했습니다.');
     }
 }
+
 
 
 // 일정 수정
@@ -339,7 +348,18 @@ function addTaskAndRedirect() {
         delayed: false,
     };
 
-    tasks.push(randomTask);
+    // ✅ 최상단부터 검사하며 delayed: false를 찾음
+    let insertIndex = 0; // 기본적으로 맨 위에 추가
+    for (let i = 0; i < tasks.length; i++) {
+        if (!tasks[i].delayed) {
+            insertIndex = i;
+            break; // 첫 번째 delayed: false를 발견하면 종료
+        }
+    }
+
+    // 해당 위치에 새 일정을 추가
+    tasks.splice(insertIndex, 0, randomTask);
+
     localStorage.setItem('tasks', JSON.stringify(tasks));
     localStorage.setItem('editId', randomTask.id);
     window.location.href = './tasks.html';
