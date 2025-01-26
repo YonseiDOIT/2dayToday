@@ -123,7 +123,7 @@ function loadTasks() {
         const taskDate = task.date;
         if (activeTab === 'today' && taskDate === todayDate) return true;
         if (activeTab === 'tomorrow' && taskDate === tomorrowDate) return true;
-        if (activeTab === 'today' && new Date(taskDate) < today && !task.completed) return true;
+        if (activeTab === 'today' && new Date(taskDate) < today && !task.completed && today - new Date(taskDate) <= 1 * 24 * 60 * 60 * 1000) return true; //미뤄진 일정은 하루 까지만 표시
         return false;
     });
 
