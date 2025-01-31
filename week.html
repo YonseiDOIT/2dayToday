@@ -7,80 +7,21 @@
     <link rel="stylesheet" href="./css/week.css">
 </head>
 <body>
-    <!-- 텍스트-1 -->
+    <!-- 상단 영역 -->
     <div class="top">
         <button class="back-button" onclick="location.href='index.html'">&#60;</button>
         <p>기록</p>
     </div>
 
-    <!-- 일주일 막대그래프 -->
-    <div class="bar-chart">
-        <div class="bar">
-            <div class="bar-name-2">최근 일주일</div>
-            <div class="bar-container">
-                <div class="bar-achieved-2" style="width: 70%;"></div>
-            </div>
-            <div class="bar-percentage">70%</div>
-        </div>
-    </div>
-
-    <!-- 텍스트-2 -->
     <div class="text">
         <div class="text-1">나의 일주일</div>
         <div class="text-2">%</div>
     </div>
 
-    <!-- 일별 막대그래프 -->
-    <div class="bar-chart">
-        <div class="bar">
-            <div class="bar-name">월요일</div>
-            <div class="bar-container">
-                <div class="bar-achieved" style="width: 70%;"></div>
-            </div>
-            <div class="bar-percentage">70%</div>
-        </div>
-        <div class="bar">
-            <div class="bar-name">화요일</div>
-            <div class="bar-container">
-                <div class="bar-achieved" style="width: 70%;"></div>
-            </div>
-            <div class="bar-percentage">70%</div>
-        </div>
-        <div class="bar">
-            <div class="bar-name">수요일</div>
-            <div class="bar-container">
-                <div class="bar-achieved" style="width: 70%;"></div>
-            </div>
-            <div class="bar-percentage">70%</div>
-        </div>
-        <div class="bar">
-            <div class="bar-name">목요일</div>
-            <div class="bar-container">
-                <div class="bar-achieved" style="width: 70%;"></div>
-            </div>
-            <div class="bar-percentage">70%</div>
-        </div>
-        <div class="bar">
-            <div class="bar-name">금요일</div>
-            <div class="bar-container">
-                <div class="bar-achieved" style="width: 70%;"></div>
-            </div>
-            <div class="bar-percentage">70%</div>
-        </div>
-        <div class="bar">
-            <div class="bar-name">토요일</div>
-            <div class="bar-container">
-                <div class="bar-achieved" style="width: 70%;"></div>
-            </div>
-            <div class="bar-percentage">70%</div>
-        </div>
-        <div class="bar">
-            <div class="bar-name">일요일</div>
-            <div class="bar-container">
-                <div class="bar-achieved" style="width: 70%;"></div>
-            </div>
-            <div class="bar-percentage">70%</div>
-        </div>
+    <!-- 일별 달성도 -->
+    <div class="bar-chart" id="daily-bars">
+        <!-- 이 부분은 JavaScript로 동적으로 채워질 예정 -->
     </div>
+    <script src="./js/week.js"></script>
 </body>
 </html>
