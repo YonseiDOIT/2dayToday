@@ -1,3 +1,4 @@
+/* ✅ 전체 틀 */
 body {
     width: 100vw;
     height: 100vh;
@@ -12,28 +13,55 @@ body {
 .common-container {
     width: 100vw; /* 뷰포트 너비에 맞춤 */
     height: 100vh; /* 뷰포트 높이에 맞춤 */
-    max-width: 360px; /* 최대 너비 설정 */
+    max-width: 400px; /* 최대 너비 설정 */
     max-height: 640px; /* 최대 높이 설정 */
     background-color: #000;
     position: relative;
-    padding: 10px;
     margin: 0 auto; /* 가운데 정렬 */
     box-sizing: border-box;
     overflow-y: auto;
 }
 
-/* ✅ 날짜 및 네비게이션 */
+/* ✅ top(날짜 및 week 버튼) */
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+}
 #main-date-container {
+    width: 100%;
+    text-align: left;
     color: #fff;
-    margin: 10px 12px
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px;
+}
+.week {
+    text-align: right;
+    width: 32px;
+    height: 32px;
 }
 
+/* ✅ 네비게이션 */
 #top-container {
     display: flex;
-    align-items: center;
-    justify-content: flex-start; /* 왼쪽 정렬 */
-    gap: 0; /* gap 제거 */
+    width: 90%;
+    padding: 16px;
+    justify-content: space-between;
+    align-items: center;    
 }
+.top button {
+    color: #fff;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 /* ✅ 오늘/내일 버튼 공통 스타일 */
 .top-today-button,
@@ -42,9 +70,11 @@ body {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    font-size: 16px;
-    padding: 8px 12px;
+    font-size: 24px;
     transition: opacity 0.3s ease;
+}
+.today-tommorrow {
+    gap: 24px;
 }
 
 /* ✅ 비활성화된 버튼 (흐린 상태) */
@@ -55,7 +85,9 @@ body {
 }
 
 .top-plus-button {
-    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
     color: #fff;
     background-color: transparent;
     border: none;
@@ -70,9 +102,8 @@ body {
 
 /* ✅ 일정 컨테이너 */
 #schedule-container {
-    overflow-y: auto;
+    width: 355px;
     max-height: calc(100vh - 200px);
-    margin-top: 10px;
     
 /* ✅ 스와이프 전환 애니메이션 */
     transition: transform 0.2s ease-in-out;
@@ -87,21 +118,27 @@ body {
 }
 
 #task-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    display: flex;
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
     color: #fff;
+    margin: 0%;
 }
 
 /* ✅ 일정 항목 스타일 */
 #task-list li { 
+    width: 300px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 5px;
+    align-self: stretch;
+    padding: 16px;
     background-color: #32ADE6;
-    border-radius: 10px;
+    border-radius: 16px;
+    font-size: 24px;
     transition: background-color 0.3s ease;
 }
 
@@ -117,8 +154,8 @@ body {
 
 /* ✅ 체크박스 커스터마이징 */
 #task-list li .custom-checkbox {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     background: url('../assets/images/check_circle.svg') no-repeat center center;
     background-size: cover;
     cursor: pointer;
@@ -150,46 +187,7 @@ body {
 }
 
 #task-list li .edit-button .edit-button-icon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     filter: brightness(0) invert(1); /* 아이콘 색상을 흰색으로 변경 */
-}
- 
-
-/* ✅ 미디어 쿼리 적용 */
-
-/* 기본 화면 최적화(360 x 640 (16:9)) */
-@media (max-width: 360px) and (max-height: 640px) {
-    body {
-        font-size: 14px;
-    }
-
-    .top-today-button,
-    .top-tomorrow-button {
-        font-size: 14px;
-    }
-
-    #task-list li {
-        padding: 4px;
-    }
-}
-
-/* 추가 화면 최적화(390 x 844 (19.5:9)) */
-@media (max-width: 390px) and (max-height: 844px) {
-    body {
-        font-size: 16px;
-        max-width: 390px;
-        max-height: 844px;
-    }
-
-    .top-today-button,
-    .top-tomorrow-button {
-        font-size: 15px;
-        padding: 10px;
-    }
-
-    #task-list li {
-        padding: 6px;
-        font-size: 15px;
-    }
 }

@@ -7,20 +7,31 @@
     <link rel="stylesheet" href="./css/main.css">
     <script src="./js/main.js" defer></script>
     <link rel="icon" href="./assets/icons/main-icon.png" type="image/png">
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css" rel="stylesheet">
 </head>
 <body>
     <div class="common-container">
-        <div id="main-date-container">
-            <div id="date"></div>
-            <div id="day"></div>
+        
+        <div class="top", onclick="location.href='week.html'">
+            <div id="main-date-container">
+                <div id="date"></div>
+                <div id="day"></div>
+            </div>
+            <div class="week">
+                <img src="assets\images\editor_choice.svg">
+            </div>
         </div>
+
         <div id="top-container">
-            <button class="top-today-button" onclick="switchTab('today')">오늘</button>
-            <button class="top-tomorrow-button" onclick="switchTab('tomorrow')">내일</button>
+            <div class="today-tommorrow">
+                <button class="top-today-button" onclick="switchTab('today')">오늘</button>
+                <button class="top-tomorrow-button" onclick="switchTab('tomorrow')">내일</button>
+            </div>
             <button class="top-plus-button" onclick="addTaskAndRedirect()">
                 <img src="assets/images/add_circle.svg" alt="Add Button" class="add-button-icon">
             </button>
         </div>
+
         <div id="schedule-container">
 
             <!-- main.js에서 task list를 동적으로 생성 -->

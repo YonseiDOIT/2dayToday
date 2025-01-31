@@ -7,11 +7,14 @@
     <link rel="stylesheet" href="./css/tasks.css">
     <script src="./js/tasks.js" defer></script>
     <link rel="icon" href="./assets/icons/main-icon.png" type="image/png">
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css" rel="stylesheet">
 </head>
 <body>
     <div class="common-container">
         <div id="header-container">
-            <button class="back-button" onclick="goBack()">&#60;</button>
+            <button class="back-button" onclick="goBack()">
+                <img src="assets\images\new_arrow_back_ios.svg">
+            </button>
             <span id="task-title" class="task-title"></span>
             <button id="delete-button" class="icon-button">
                 <img src="assets/images/delete_forever.svg" alt="Delete Icon" class="button-icon">
@@ -49,8 +52,10 @@
         <div class="modal-popup">
             <h3>정말 삭제하시겠습니까?</h3>
             <p>삭제하시면 되돌릴 수 없습니다.</p>
-            <button type="button" class="deletion-btn">삭제</button>
-            <button type="button" class="cancel-btn">취소</button>
+            <div class="modal-but">
+                <button type="button" class="deletion-btn">삭제</button>
+                <button type="button" class="cancel-btn">취소</button>
+            </div>
         </div>
     </div>
 </body>

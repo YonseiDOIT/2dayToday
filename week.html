@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEEK</title>
+    <link rel="stylesheet" href="./css/week.css">
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css" rel="stylesheet">
+</head>
+<body>
+    <div class="outline">
+        <!-- 상단 영역 -->
+        <div class="top">
+            <button class="back-button" onclick="location.href='index.html'">
+                <img src="assets\images\new_arrow_back_ios.svg">
+            </button>
+            <p>기록</p>
+        </div>
+
+        <div class="text">
+            <div class="text-1">나의 일주일</div>
+            <div class="text-2">%</div>
+        </div>
+
+        <!-- 일별 달성도 -->
+        <div class="bar-chart" id="daily-bars">
+            <!-- 이 부분은 JavaScript로 동적으로 채워질 예정 -->
+        </div>
+    </div>
+    <script src="./js/week.js"></script>
+</body>
+</html>
