@@ -232,7 +232,7 @@ function loadTasks() {
     });
     
 }
-// ✅ 드래그 순서 바꾸기
+// ✅ 드래그 순서 바꾸기 수정
 function swapTasks(taskList, item1, item2) {
     const items = Array.from(taskList.children);
     const index1 = items.indexOf(item1);
@@ -243,26 +243,32 @@ function swapTasks(taskList, item1, item2) {
     } else {
         taskList.insertBefore(item1, item2);
     }
-}
 
-// ✅ LocalStorage 순서 업데이트
+    // ✅ 순서만 갱신하고 날짜 변경 로직은 없음
+    updateTaskOrder();
+}
+ 
+
+// ✅ LocalStorage 순서 및 날짜 업데이트
 function updateTaskOrder() {
     const updatedTasks = [];
     const taskListItems = document.querySelectorAll('#task-list li');
 
     taskListItems.forEach((li) => {
-        // ✅ data-id 속성으로 ID를 안전하게 가져오기
-        const taskId = li.getAttribute('data-id');  
-
+        const taskId = li.getAttribute('data-id');
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         const task = tasks.find(t => t.id === taskId);
+
         if (task) {
             updatedTasks.push(task);
         }
     });
-
+    console.log('updatetasks')
+    console.log(JSON.stringify(updatedTasks, null, 2));
+    
     localStorage.setItem('tasks', JSON.stringify(updatedTasks));
 }
+
 
 
 

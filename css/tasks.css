@@ -1,41 +1,35 @@
 /* ✅ 전체 틀 */
 body {
-    width: 100vw;
-    height: 100vh;
-    max-width: 360px;
-    max-height: 640px;
+    font-family: "NanumSquare Neo";
     margin: 0 auto;
     background-color: #000;
     box-sizing: border-box;
     overflow-y: auto;
 }
-
+button{
+    padding:0;
+}
 .common-container {
     width: 100vw; /* 뷰포트 너비에 맞춤 */
     height: 100vh; /* 뷰포트 높이에 맞춤 */
-    max-width: 360px; /* 최대 너비 설정 */
-    max-height: 640px; /* 최대 높이 설정 */
-    background-color: #000;
     position: relative;
-    padding: 16px;
-    margin: 0 auto; /* 가운데 정렬 */
     box-sizing: border-box;
     overflow-y: auto;
 }
-
 
 /* 헤더 */
 #header-container {
     display: flex;
     align-items: center; /* 수직 중앙 정렬 */
     justify-content: flex-start; /* 왼쪽부터 정렬 */
-    gap: 10px; /* 버튼과 제목 사이 여백 */
-    margin-bottom: 32px;
+    padding:16px;
 }
 .back-button {
     width: 32px;
     height: 32px;
     background-color: transparent;
+    padding:0;
+
     border: none;
     cursor: pointer;
     display: flex;
@@ -44,89 +38,19 @@ body {
 }
 .task-title {
     color: #fff;
-    font-size: 24px;
+    margin-left: 8px;
     white-space: nowrap; /* 제목이 줄 바꿈되지 않도록 설정 */
     overflow: hidden;
-    text-overflow: ellipsis; /* 긴 제목은 ...로 생략 */
     flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
-}
-
-/* ✅ 날짜 및 네비게이션 */
-#main-date-container {
-    margin-bottom: 32px;
-    color: #fff;
-}
-#top-container {
-    display: flex;
-    justify-content: space-around; /* 버튼을 균등하게 배치 */
-    align-items: center;
-    margin-bottom: 32px;
-    gap: 10px;
-}
-
-.tab-button {
-    flex: 1; /* 버튼이 동일한 너비를 차지 */
-    padding: 10px 0;
-    border: none;
-    border-radius: 10px; /* 모서리 둥글게 */
-    background-color: #1C1C1E; /* 비활성화 색상 */
-    color: #fff;
-    font-size: 1em;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* 색상 전환 애니메이션 */
-}
-
-.tab-button.active {
-    background-color: #32ADE6; /* 활성화 색상 */
-    font-weight: bold;
-}
-
-/* ✅ 입력 필드 */
-#name-container,
-#explanation-container {
-    margin-top: 32px;
-}
-
-label {
-    color: #32ADE6;
-    font-size: 18px;
-}
-
-#name-container input {
-    width: 100%;
-    margin-top: 5px;
-    border: none;
-    color: #fff;
+    
     font-size: 24px;
-    background-color: #000;
-    border-radius: 5px;
-    box-sizing: border-box;
+    font-family: "NanumSquare Neo";
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px; /* 133.333% */
+    
+    text-overflow: ellipsis; /* 긴 제목은 ...로 생략 */
 }
-
-#name-container input::placeholder {
-    color: #fff;
-}
-
-#explanation-container textarea {
-    width: 100%;
-    height: 250px;
-    margin-top: 5px;
-    border: none;
-    color: #fff;
-    font-size: 24px;
-    background-color: #000;
-    border-radius: 5px;
-    resize: none;
-    box-sizing: border-box;
-    overflow-y: auto;
-}
-
-#explanation-container textarea::placeholder {
-    color: #fff;
-}
-
-/* ✅ 버튼 컨테이너 */
 
 /* ✅ 헤더 삭제 버튼 (아이콘만 표시, 배경 투명) */
 .icon-button {
@@ -144,24 +68,186 @@ label {
     filter: invert(1); /* 아이콘 색상을 흰색으로 설정 */
     transition: transform 0.2s ease;
 }
-
 .icon-button:hover img {
     transform: scale(1.1); /* 호버 시 아이콘 확대 */
 }
 
-#button-container {
-    position: fixed;
-    bottom: 0%;
+/* 오늘 내일 네비게이션 컨테이너*/
+#top-container {
     display: flex;
-    padding: 16px;
-    gap: 16px;
+    align-items: center;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom:16px;
+    gap:16px;
+    align-self: stretch;
+}
+/* 오늘 내일 버튼 */
+.tab-button {
+    flex: 1; /* 버튼이 동일한 너비를 차지 */
+    
+    height: 48px;
+    flex-shrink: 0; 
+
+    border: none;
+    border-radius: 16px; /* 모서리 둥글게 */
+    background-color: #1C1C1E; /* 비활성화 색상 */
+    color: #fff;
+    font-size: 1em;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 색상 전환 애니메이션 */
+
+    font-family: "NanumSquare Neo";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px; /* 177.778% */
+}
+/* 활성화된 오늘 내일 버튼*/
+.tab-button.active {
+    background-color: #32ADE6; /* 활성화 색상 */
+    font-family: "NanumSquare Neo";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px; /* 177.778% */
 }
 
-/* ✅ 취소 및 저장 버튼 */
+/* 일정 미루기 스위치 관련::*/
+.delay-container{
+    padding:16px;
+}
+/* 스위치 레이아웃 설정 (크기 조정) */
+.delay-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* 스위치 너비 */
+    height: 30px; /* 스위치 높이 */
+}
+/* 숨기기 체크박스 */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+/* 슬라이드 스타일 (크기 조정) */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+/* 슬라이드 버튼 (크기 조정) */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px; 
+    width: 22px;  
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+}
+/* 체크된 상태 */
+input:checked + .slider {
+    background-color: #32ADE6;
+}
+input:checked + .slider:before {
+    transform: translateX(20px);  /* 슬라이드 버튼 이동 거리 */
+}
+/* 스위치 텍스트 */
+.switch-label {
+    font-size: 18px;
+    margin-left: 10px;
+    margin-top: 10px;
+    color: #fff;
+    font-family: "NanumSquare Neo";
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px; /* 177.778% */
+}
+
+
+/* 일정명 입력 필드 */
+#name-container{
+    padding:16px;
+}
+label {
+    color: #32ADE6;
+    font-size: 18px;
+    font-family: "NanumSquare Neo";
+    height: 32px;
+    display: inline-block; /* 높이 적용을 위해 설정 */
+    line-height: 32px; /* 텍스트 중앙 정렬 */
+}
+
+#name-container input {
+    width: 100%;
+    height: 32px; /* 입력 필드 높이 설정 */
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    background-color: #000;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+    font-family: "NanumSquare Neo";
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px; /* 133.333% */
+}
+#name-container input::placeholder {
+    color: #fff;
+}
+
+/* 일정에 대한 설명 관련:: */
+#explanation-container{
+    padding:16px;
+}
+#explanation-container textarea {
+    width: 100%;
+    height: 250px;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    background-color: #000;
+    border-radius: 5px;
+    resize: none;
+    box-sizing: border-box;
+    overflow-y: auto;
+
+    font-family: "NanumSquare Neo";
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px;
+}
+#explanation-container textarea::placeholder {
+    color: #fff;
+}
+
+/* 하단 버튼 컨테이너 */
+#button-container {
+    display: flex;
+    width: 100%; /* 화면 너비와 동일 */
+    padding: 16px;
+    gap: 16px;
+    align-items: center;
+    box-sizing: border-box;
+    position: fixed; /* 하단 고정 */
+    bottom: 0; /* 화면 하단에 위치 */
+    background-color: #000; /* 배경색 설정 */
+}
+
 .action-button {
-    width: 150px;
-    height: 45px; /* 높이 약간 증가 */
-    font-size: 24px; /* 텍스트 크기 증가 */
+    flex: 1; /* 모든 버튼의 너비를 동일하게 설정 */
+    padding: 16px;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -170,13 +256,20 @@ label {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+    font-family: "NanumSquare Neo";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
 }
 
 .action-button img.button-icon {
-    width: 24px;
-    height: 24px;
-    filter: brightness(0) invert(1); /* 아이콘 흰색 */
+    width: 32px;
+    height: 32px;
+    filter: brightness(0) invert(1);
+    margin-right:8px;
 }
 
 .action-button:hover {
@@ -242,64 +335,4 @@ label {
     justify-content: center;
     align-items: center; 
     font-size: 0.9em;
-}
-
-/* ✅ 스위치 */
-
-/* 스위치 레이아웃 설정 (크기 조정) */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 50px; /* 스위치 너비 */
-    height: 30px; /* 스위치 높이 */
-}
-
-/* 숨기기 체크박스 */
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-/* 슬라이드 스타일 (크기 조정) */
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 34px;
-}
-
-/* 슬라이드 버튼 (크기 조정) */
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 22px;  /* 슬라이드 버튼 높이 */
-    width: 22px;   /* 슬라이드 버튼 너비 */
-    border-radius: 50%;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-}
-
-/* 체크된 상태 */
-input:checked + .slider {
-    background-color: #32ADE6;
-}
-
-input:checked + .slider:before {
-    transform: translateX(20px);  /* 슬라이드 버튼 이동 거리 */
-}
-
-/* 스위치 텍스트 */
-.switch-label {
-    font-size: 18px;
-    margin-left: 10px;
-    margin-top: 10px;
-    color: #fff;
 }

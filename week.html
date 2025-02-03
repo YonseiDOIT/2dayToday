@@ -8,20 +8,26 @@
     <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css" rel="stylesheet">
 </head>
 <body>
-    <div class="outline">
-        <!-- 상단 영역 -->
-        <div class="top">
+    <div class="common-container">
+        <div class="header-container">
             <button class="back-button" onclick="location.href='index.html'">
                 <img src="assets\images\new_arrow_back_ios.svg">
             </button>
             <p>기록</p>
         </div>
 
-        <div class="text">
-            <div class="text-1">나의 일주일</div>
+        <div class="weekly-overview-bar">
+            <div class="weekly-bar-container">
+                <div class="weekly-bar-achieved"></div> <!-- 달성률에 따라 width 수정 -->
+                <div class="this-week-text">최근 일주일</div>
+                <div class="this-week-rate">5/5</div> 
+            </div>
+        </div>
+        
+        <div class="my-week-bar">
+            <div class="my-week">나의 일주일</div>
             <div class="text-2">%</div>
         </div>
-
         <!-- 일별 달성도 -->
         <div class="bar-chart" id="daily-bars">
             <!-- 이 부분은 JavaScript로 동적으로 채워질 예정 -->

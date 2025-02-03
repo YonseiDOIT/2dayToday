@@ -24,11 +24,15 @@
             <button id="today-tab" class="tab-button active" onclick="switchTab('today')">오늘</button>
             <button id="tomorrow-tab" class="tab-button" onclick="switchTab('tomorrow')">내일</button>
         </div>
-        <label class="switch">
-            <input type="checkbox" id="mySwitch">
-            <span class="slider"></span>
-        </label>
-            <span class="switch-label">일정 미루기</span>
+
+        <div class="delay-container">
+            <label class="delay-switch">
+                <input type="checkbox" id="mySwitch">
+                <span class="slider"></span>
+            </label>
+                <span class="switch-label">일정 미루기</span>
+        </div>
+
         <div id="name-container">
             <label for="task-name">일정명</label>
             <input id="task-name" type="text" placeholder="일정명을 입력하세요">
@@ -53,8 +57,8 @@
             <h3>정말 삭제하시겠습니까?</h3>
             <p>삭제하시면 되돌릴 수 없습니다.</p>
             <div class="modal-but">
-                <button type="button" class="deletion-btn">삭제</button>
                 <button type="button" class="cancel-btn">취소</button>
+                <button type="button" class="deletion-btn">삭제</button>
             </div>
         </div>
     </div>
