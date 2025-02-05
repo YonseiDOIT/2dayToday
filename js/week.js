@@ -1,7 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
     displayWeeklyProgress();
     displayWeeklyOverallProgress(); // 일주일 전체 성공률 표시
+    updateWeeklyBar();
 });
+
+// 주간 달성 바 업데이트
+function updateWeeklyBar() {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    const today = new Date();
+    const last7Days = getLast7Days(today);
+
+    const totalTasks = last7Days.reduce((total, date) => {
+        const formattedDate = formatDate(date);
+        return total + tasks.filter(task => task.date === formattedDate).length;
+    }, 0);
+
+    const completedTasks = last7Days.reduce((completed, date) => {
+        const formattedDate = formatDate(date);
+        return completed + tasks.filter(task => task.date === formattedDate && task.completed).length;
+    }, 0);
+
+    const weeklyBarAchieved = document.querySelector(".weekly-bar-achieved");
+    const weeklyRateText = document.querySelector(".this-week-rate");
+
+    const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+    weeklyBarAchieved.style.width = `${percentage}%`;
+    weeklyRateText.textContent = `${completedTasks}/${totalTasks}`; 
+}
+
 
 // ✅ 근 7일 달성도 계산 및 그래프 표시
 function displayWeeklyProgress() {

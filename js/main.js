@@ -59,44 +59,66 @@ function categorizeDelayedTasks() {
 //  기본 브라우저 스와이프 비활성화
 let touchStartX = 0;
 let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
+const swipeThreshold = 50;  // 가로 스와이프 최소 거리
+const refreshThreshold = 100;  // 새로고침 최소 세로 드래그 거리
 
-// 터치 시작 시 X 좌표 저장 및 기본 동작 방지
+// 터치 시작 시 X, Y 좌표 저장
 document.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
 }, { passive: true });
 
-// 터치 이동 시 브라우저 기본 스와이프 동작 방지
+// 터치 이동 시 수직 및 수평 방향에 따라 동작 결정
 document.addEventListener('touchmove', (e) => {
-    e.preventDefault(); // 기본 스와이프 동작 방지
+    touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
+
+    const horizontalDistance = Math.abs(touchEndX - touchStartX);
+    const verticalDistance = Math.abs(touchEndY - touchStartY);
+
+    if (horizontalDistance > verticalDistance) {
+        // 가로로 스와이프할 때는 기본 스크롤 방지
+        e.preventDefault();
+    }
 }, { passive: false });
 
-// 터치 종료 시 X 좌표 저장 및 스와이프 방향 확인
+// 터치 종료 시 동작 결정 (새로고침 또는 스와이프)
 document.addEventListener('touchend', (e) => {
     touchEndX = e.changedTouches[0].screenX;
-    handleSwipeGesture();
+    touchEndY = e.changedTouches[0].screenY;
+
+    const horizontalDistance = touchEndX - touchStartX;
+    const verticalDistance = touchEndY - touchStartY;
+
+    if (Math.abs(horizontalDistance) > swipeThreshold && Math.abs(horizontalDistance) > Math.abs(verticalDistance)) {
+        // 가로 스와이프 처리
+        handleSwipeGesture(horizontalDistance);
+    } else if (verticalDistance > refreshThreshold && verticalDistance > Math.abs(horizontalDistance)) {
+        // 아래로 드래그 감지 (세로 방향)
+        pullToRefresh();
+    }
 });
 
 // 스와이프 동작 처리
-function handleSwipeGesture() {
-    const swipeDistance = touchEndX - touchStartX;
-    const scheduleContainer = document.getElementById('schedule-container');
-
-    if (swipeDistance > 50) {
+function handleSwipeGesture(horizontalDistance) {
+    if (horizontalDistance > swipeThreshold) {
         // 오른쪽 스와이프 (오늘로 이동)
-        scheduleContainer.classList.add('swipe-right');
-        setTimeout(() => {
-            switchTab('today');
-            scheduleContainer.classList.remove('swipe-right');
-        }, 300);
-    } else if (swipeDistance < -50) {
+        switchTab('today');
+    } else if (horizontalDistance < -swipeThreshold) {
         // 왼쪽 스와이프 (내일로 이동)
-        scheduleContainer.classList.add('swipe-left');
-        setTimeout(() => {
-            switchTab('tomorrow');
-            scheduleContainer.classList.remove('swipe-left');
-        }, 300);
+        switchTab('tomorrow');
     }
 }
+
+// 아래로 드래그 시 새로고침 기능
+function pullToRefresh() { 
+    loadTasks(); // 새로고침 시 일정 다시 로드
+    console.log('새로고침 완료');
+}
+
+
 
 //날짜 포맷팅 관련
 function formatDate(date) {
@@ -123,10 +145,10 @@ function loadTasks() {
         const taskDate = task.date;
         if (activeTab === 'today' && taskDate === todayDate) return true;
         if (activeTab === 'tomorrow' && taskDate === tomorrowDate) return true;
-        if (activeTab === 'today' && new Date(taskDate) < today && !task.completed && today - new Date(taskDate) <= 1 * 24 * 60 * 60 * 1000) return true; //미뤄진 일정은 하루 까지만 표시
+        if (activeTab === 'today' && isOneDayPast(taskDate, today) && !task.completed) return true; //미뤄진 일정은 하루 까지만 표시
         return false;
     });
-
+    console.log(filteredTasks);
     let draggedItem = null;
     let longPressTimer;
 
@@ -174,7 +196,7 @@ function loadTasks() {
         editButton.appendChild(editIcon);
         li.appendChild(editButton);
     
-        // ✅ 드래그 앤 드롭 이벤트 리스너 추가
+        // 드래그 앤 드롭 이벤트 리스너 추가
 
         li.addEventListener('touchstart', (e) => {
             longPressTimer = setTimeout(() => {
@@ -232,6 +254,17 @@ function loadTasks() {
     });
     
 }
+//하루 지난 일정만 반환
+function isOneDayPast(taskDate, today) {
+    const taskDateOnly = new Date(new Date(taskDate).setHours(0, 0, 0, 0));  // 시간 초기화
+    const todayDateOnly = new Date(today.setHours(0, 0, 0, 0));  // 오늘 날짜 시간 초기화
+
+    const timeDifference = todayDateOnly - taskDateOnly;  // 두 날짜의 차이 계산
+    const daysDifference = timeDifference / (1000 * 60 * 60 * 24);  // 일 단위로 변환
+
+    return daysDifference === 1;  // 정확히 하루 차이일 때만 true 반환
+}
+
 // ✅ 드래그 순서 바꾸기 수정
 function swapTasks(taskList, item1, item2) {
     const items = Array.from(taskList.children);
@@ -252,20 +285,28 @@ function swapTasks(taskList, item1, item2) {
 // ✅ LocalStorage 순서 및 날짜 업데이트
 function updateTaskOrder() {
     const updatedTasks = [];
-    const taskListItems = document.querySelectorAll('#task-list li');
+    const taskListItems = document.querySelectorAll('#task-list li');  // 현재 탭의 모든 항목 가져오기
+    const allTasks = JSON.parse(localStorage.getItem('tasks')) || [];  // 모든 일정 가져오기
 
+    // ✅ 현재 탭의 일정만 먼저 업데이트된 순서로 추가
     taskListItems.forEach((li) => {
         const taskId = li.getAttribute('data-id');
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        const task = tasks.find(t => t.id === taskId);
+        const task = allTasks.find(t => t.id === taskId);
 
         if (task) {
-            updatedTasks.push(task);
+            updatedTasks.push(task);  // 현재 탭에 있는 일정 추가
         }
     });
-    console.log('updatetasks')
-    console.log(JSON.stringify(updatedTasks, null, 2));
+
+    // ✅ 다른 탭의 일정 추가 (현재 화면에 표시되지 않은 일정)
+    allTasks.forEach((task) => {
+        // 현재 탭의 일정에 추가되지 않은 경우만 추가
+        if (!updatedTasks.some(updatedTask => updatedTask.id === task.id)) {
+            updatedTasks.push(task);  // 나머지 일정 추가
+        }
+    });
     
+    // ✅ 로컬 저장소에 최종 정렬된 일정 저장
     localStorage.setItem('tasks', JSON.stringify(updatedTasks));
 }
 
@@ -306,7 +347,7 @@ function editTask(id) {
 function switchTab(tab) {
     activeTab = tab;
     localStorage.setItem('activeTab', tab);
-    loadTasks();
+    loadTasks();  // 탭에 따라 새로운 일정 로드
 
     const todayButton = document.querySelector('.top-today-button');
     const tomorrowButton = document.querySelector('.top-tomorrow-button');
@@ -314,15 +355,13 @@ function switchTab(tab) {
     if (tab === 'today') {
         todayButton.classList.add('active');
         tomorrowButton.classList.remove('active');
-
-        todayButton.classList.remove('disabled'); // 오늘 버튼 활성화
-        tomorrowButton.classList.add('disabled'); // 내일 버튼 비활성화
+        todayButton.classList.remove('disabled');
+        tomorrowButton.classList.add('disabled');
     } else if (tab === 'tomorrow') {
         tomorrowButton.classList.add('active');
         todayButton.classList.remove('active');
-
-        tomorrowButton.classList.remove('disabled'); // 내일 버튼 활성화
-        todayButton.classList.add('disabled'); // 오늘 버튼 비활성화
+        tomorrowButton.classList.remove('disabled');
+        todayButton.classList.add('disabled');
     }
 }
 
@@ -332,7 +371,7 @@ function generateId() {
 }
 
 
-function addTaskAndRedirect() {
+function addTask() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
     // ✅ 현재 활성화된 탭에 따라 날짜 설정
@@ -366,7 +405,11 @@ function addTaskAndRedirect() {
     // 해당 위치에 새 일정을 추가
     tasks.splice(insertIndex, 0, randomTask);
 
+    // 로컬 저장소에 업데이트된 일정 저장
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    localStorage.setItem('editId', randomTask.id);
-    window.location.href = './tasks.html';
+
+    // ✅ 일정 추가 후 화면에 즉시 반영
+    loadTasks();
+
+
 }

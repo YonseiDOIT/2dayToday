@@ -15,9 +15,10 @@ body {
     padding:16px;
 }
 .back-button {
+    position: relative; /* 터치 확장에 필요한 설정 */
     width: 32px;
-    height:32px;
-    padding:0px;
+    height: 32px;
+    padding: 0px;
     color: #fff;
     background-color: transparent;
     border: none;
@@ -26,12 +27,23 @@ body {
     align-items: center;
     justify-content: center;
 }
+/* ✅ 터치 영역 확장 */
+.back-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 160px;
+    height: 64px;
+    background-color: transparent;
+}
 .header-container p {
     margin-left: 8px;
     margin-top:0px;
     margin-bottom:0px;
     color: var(--WHITE, #FFF);
-    font-family: "NanumSquare Neo";
+    font-family: "NanumSquareNeo";
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
@@ -72,10 +84,9 @@ body {
     position: relative;
     z-index: 2; /* 배경 바보다 위에 표시 */
     color: #fff;
-    font-family: "NanumSquare Neo";
+    font-family: "NanumSquareNeoBold";
     font-size: 24px;
     font-style: normal;
-    font-weight: 700;
     line-height: 32px;
 }
 
@@ -98,10 +109,9 @@ body {
 }
 
 .my-week-bar, .text-2 {
-    font-family: "NanumSquare Neo";
+    font-family: "NanumSquareNeoBold";
     font-size: 18px;
     font-style: normal;
-    font-weight: 700;
     color: var(--WHITE, #FFF);
     line-height: normal; /* 줄 간격을 기본값으로 설정하여 바닥에 밀착 */
 }
@@ -150,10 +160,9 @@ body {
     z-index: 2;
 
     color: var(--WHITE, #FFF);
-    font-family: "NanumSquare Neo";
+    font-family: "NanumSquareNeoBold";
     font-size: 24px;
     font-style: normal;
-    font-weight: 700;
     line-height: 32px; /* 133.333% */
 }
 
@@ -165,9 +174,8 @@ body {
     z-index: 2;
 
     color: var(--WHITE, #FFF);
-    font-family: "NanumSquare Neo";
+    font-family: "NanumSquareNeoBold";
     font-size: 24px;
     font-style: normal;
-    font-weight: 700;
     line-height: 32px; /* 133.333% */
 }
