@@ -7,6 +7,12 @@ body {
     overflow-y: auto; /* 상하 스크롤만 허용 */
     padding: 0; /* 패딩 제거 */
 }
+button, 
+a {
+    outline: none;
+    -webkit-tap-highlight-color: transparent; /* 터치 하이라이트 제거 */
+    background-color: transparent; /* 배경색 변경 방지 */
+}
 
 .header-container {
     display: flex;

@@ -7,7 +7,16 @@ body {
 
 button {
     padding: 0;
+    outline: none;
 }
+
+button, 
+a {
+    outline: none;
+    -webkit-tap-highlight-color: transparent; /* 터치 하이라이트 제거 */
+    background-color: transparent; /* 배경색 변경 방지 */
+}
+
 
 /* 전체 배경 컨테이너 */
 .common-container {

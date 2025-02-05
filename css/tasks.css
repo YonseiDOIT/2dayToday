@@ -10,6 +10,12 @@ body {
 button {
     padding: 0;
 }
+button, 
+a {
+    outline: none;
+    -webkit-tap-highlight-color: transparent; /* 터치 하이라이트 제거 */
+    background-color: transparent; /* 배경색 변경 방지 */
+}
 
 .common-container {
     width: 100vw;

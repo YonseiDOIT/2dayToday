@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOMContentLoaded: DOM 로드 완료');
     initializePage();
+    initializeDefaultTasks(); // ✅ 최초 방문 시 기본 일정 추가
 });
 
 window.addEventListener('load', () => {
@@ -22,6 +23,52 @@ function initializePage() {
     categorizeDelayedTasks(); // ✅ 미뤄진 일정 분류
     switchTab(activeTab);
     loadTasks();
+}
+
+// ✅ 최초 방문 시 기본 일정 데이터 초기화 함수
+function initializeDefaultTasks() {
+    const isFirstVisit = !localStorage.getItem('firstVisit'); // 첫 방문 여부 확인
+
+    if (isFirstVisit) {
+        const defaultTasks = [
+            {
+                id: generateId(),
+                name: "❗ 어제 미완료된 일정입니다",
+                description: "어제 미완료된 일정은 하루동안 오늘 탭에 표시됩니다.",
+                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 1))), // 어제 날짜
+                completed: false,
+                delayed: false
+            },
+            {
+                id: generateId(),
+                name: "✔ 할 일을 체크해보세요",
+                description: "체크박스를 눌러 완료 상태로 바꿔보세요.",
+                date: formatDate(new Date()), // 오늘 날짜
+                completed: false,
+                delayed: false
+            },
+            {
+                id: generateId(),
+                name: "↕ 길게 눌러 순서를 바꿔보세요",
+                description: "일정을 길게 눌러 위아래로 이동해보세요.",
+                date: formatDate(new Date()), // 오늘 날짜
+                completed: false,
+                delayed: false
+            },
+            {
+                id: generateId(),
+                name: "📅 내일의 계획을 미리 세워보세요",
+                description: "내일 할 일을 미리 작성해 준비하세요.",
+                date: formatDate(new Date(new Date().setDate(new Date().getDate() + 1))), // 내일 날짜
+                completed: false,
+                delayed: false
+            },
+        ];
+
+        // 로컬 스토리지에 기본 일정 저장
+        localStorage.setItem('tasks', JSON.stringify(defaultTasks));
+        localStorage.setItem('firstVisit', 'true'); // 플래그 설정하여 다시 추가되지 않도록 방지
+    }
 }
 
 // ✅ 미뤄진 일정 분류 및 7일 이상 지난 일정 삭제
@@ -148,7 +195,6 @@ function loadTasks() {
         if (activeTab === 'today' && isOneDayPast(taskDate, today) && !task.completed) return true; //미뤄진 일정은 하루 까지만 표시
         return false;
     });
-    console.log(filteredTasks);
     let draggedItem = null;
     let longPressTimer;
 
