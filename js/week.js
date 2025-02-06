@@ -29,7 +29,7 @@ function updateWeeklyBar() {
 }
 
 
-// ✅ 근 7일 달성도 계산 및 그래프 표시
+// 근 7일 달성도 계산 및 그래프 표시
 function displayWeeklyProgress() {
     const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     const today = new Date();
@@ -58,12 +58,12 @@ function displayWeeklyProgress() {
         barAchieved.className = "bar-achieved";
         barAchieved.style.width = `${completedPercentage}%`;
 
-        // ✅ 날짜 텍스트
+        // 날짜 텍스트
         const barDate = document.createElement("div");
         barDate.className = "bar-date";
         barDate.textContent = displayDate;
 
-        // ✅ 퍼센트 텍스트
+        // 퍼센트 텍스트
         const barPercentage = document.createElement("div");
         barPercentage.className = "bar-percentage";
         barPercentage.textContent = `${completedPercentage}%`;
@@ -78,7 +78,7 @@ function displayWeeklyProgress() {
     });
 }
 
-// ✅ 일주일 전체 성공률 계산 및 표시
+// 일주일 전체 성공률 계산 및 표시
 function displayWeeklyOverallProgress() {
     const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     const today = new Date();
@@ -101,7 +101,7 @@ function displayWeeklyOverallProgress() {
     overallTextElement.textContent = `${overallPercentage}%`; // 일주일 성공률 텍스트 업데이트
 }
 
-// ✅ 오늘 기준 지난 7일 날짜 배열 생성
+// 오늘 기준 지난 7일 날짜 배열 생성
 function getLast7Days(today) {
     const last7Days = [];
     for (let i = 0; i < 7; i++) {
@@ -112,7 +112,7 @@ function getLast7Days(today) {
     return last7Days.reverse(); // 날짜를 오름차순으로 정렬
 }
 
-// ✅ 날짜 포맷팅 (YYYY-MM-DD)
+// 날짜 포맷팅 (YYYY-MM-DD)
 function formatDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -120,7 +120,7 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
-// ✅ 화면 표시용 날짜 포맷팅 (MM/DD)
+// 화면 표시용 날짜 포맷팅 (MM/DD)
 function formatDateForDisplay(date) {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");

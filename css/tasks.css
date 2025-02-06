@@ -1,4 +1,4 @@
-/* ✅ 전체 틀 */
+/* 전체 틀 */
 body {
     font-family: "NanumSquareNeo";
     margin: 0 auto;
@@ -25,7 +25,7 @@ a {
     overflow-y: auto;
 }
 
-/* ✅ 헤더 */
+/* 헤더 */
 #header-container {
     display: flex;
     align-items: center;
@@ -46,7 +46,7 @@ a {
     justify-content: center;
 }
 
-/* ✅ 터치 영역 확장 */
+/* 터치 영역 확장 */
 .back-button::before {
     content: '';
     position: absolute;
@@ -71,7 +71,7 @@ a {
     text-overflow: ellipsis;
 }
 
-/* ✅ 헤더 삭제 버튼 터치 확장 */
+/* 헤더 삭제 버튼 터치 확장 */
 .icon-button {
     position: relative;
     background: transparent;
@@ -115,7 +115,7 @@ a {
     align-self: stretch;
 }
 
-/* ✅ 오늘 내일 버튼 터치 확장 */
+/* 오늘 내일 버튼 터치 확장 */
 .tab-button {
     position: relative;
     flex: 1;
@@ -286,7 +286,7 @@ label {
     background-color: #000;
 }
 
-/* ✅ 하단 버튼 터치 확장 */
+/* 하단 버튼 터치 확장 */
 .action-button {
     position: relative;
     flex: 1;
@@ -328,7 +328,7 @@ label {
     transform: scale(1.05);
 }
 
-/* ✅ 모달 팝업 */
+/* 모달 팝업 */
 .modal {
     display: none;
     position: absolute;

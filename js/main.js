@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOMContentLoaded: DOM 로드 완료');
     initializePage();
-    initializeDefaultTasks(); // ✅ 최초 방문 시 기본 일정 추가
+    initializeDefaultTasks(); // 최초 방문 시 기본 일정 추가
 });
 
 window.addEventListener('load', () => {
@@ -20,12 +20,12 @@ function initializePage() {
     document.getElementById('date').textContent = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
     document.getElementById('day').textContent = dayNames[today.getDay()];
 
-    categorizeDelayedTasks(); // ✅ 미뤄진 일정 분류
+    categorizeDelayedTasks(); // 미뤄진 일정 분류
     switchTab(activeTab);
     loadTasks();
 }
 
-// ✅ 최초 방문 시 기본 일정 데이터 초기화 함수
+// 최초 방문 시 기본 일정 데이터 초기화 함수
 function initializeDefaultTasks() {
     const isFirstVisit = !localStorage.getItem('firstVisit'); // 첫 방문 여부 확인
 
@@ -79,7 +79,7 @@ function initializeDefaultTasks() {
     }
 }
 
-// ✅ 미뤄진 일정 분류 및 7일 이상 지난 일정 삭제
+// 미뤄진 일정 분류 및 7일 이상 지난 일정 삭제
 function categorizeDelayedTasks() {
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const today = new Date();
@@ -152,7 +152,7 @@ document.addEventListener('touchend', (e) => {
         handleSwipeGesture(horizontalDistance);
     } else if (verticalDistance > refreshThreshold && verticalDistance > Math.abs(horizontalDistance)) {
         // 아래로 드래그 감지 (세로 방향)
-        pullToRefresh();
+        // pullToRefresh();
     }
 });
 
@@ -183,8 +183,10 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
-// ✅ 일정 로드 (과거 일정 색상 변경)
+// 일정 로드 (과거 일정 색상 변경)
 function loadTasks() {
+    localStorage.setItem('isNewTask', 'false');  // 새 일정 추가 플래그 설정
+
     const taskList = document.getElementById('task-list');
     taskList.innerHTML = '';
 
@@ -208,7 +210,7 @@ function loadTasks() {
 
     filteredTasks.forEach((task) => {
         const li = document.createElement('li');
-        li.setAttribute('data-id', task.id); // ✅ data-id 속성 추가
+        li.setAttribute('data-id', task.id); // data-id 속성 추가
     
         const taskDateObj = new Date(task.date);
         const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -293,7 +295,7 @@ function isOneDayPast(taskDate, today) {
     return daysDifference === 1;  // 정확히 하루 차이일 때만 true 반환
 }
 
-// ✅ 드래그 순서 바꾸기 수정
+// 드래그 순서 바꾸기 수정
 function swapTasks(taskList, item1, item2) {
     const items = Array.from(taskList.children);
     const index1 = items.indexOf(item1);
@@ -305,18 +307,18 @@ function swapTasks(taskList, item1, item2) {
         taskList.insertBefore(item1, item2);
     }
 
-    // ✅ 순서만 갱신하고 날짜 변경 로직은 없음
+    // 순서만 갱신하고 날짜 변경 로직은 없음
     updateTaskOrder();
 }
  
 
-// ✅ LocalStorage 순서 및 날짜 업데이트
+// LocalStorage 순서 및 날짜 업데이트
 function updateTaskOrder() {
     const updatedTasks = [];
     const taskListItems = document.querySelectorAll('#task-list li');  // 현재 탭의 모든 항목 가져오기
     const allTasks = JSON.parse(localStorage.getItem('tasks')) || [];  // 모든 일정 가져오기
 
-    // ✅ 현재 탭의 일정만 먼저 업데이트된 순서로 추가
+    // 현재 탭의 일정만 먼저 업데이트된 순서로 추가
     taskListItems.forEach((li) => {
         const taskId = li.getAttribute('data-id');
         const task = allTasks.find(t => t.id === taskId);
@@ -326,7 +328,7 @@ function updateTaskOrder() {
         }
     });
 
-    // ✅ 다른 탭의 일정 추가 (현재 화면에 표시되지 않은 일정)
+    // 다른 탭의 일정 추가 (현재 화면에 표시되지 않은 일정)
     allTasks.forEach((task) => {
         // 현재 탭의 일정에 추가되지 않은 경우만 추가
         if (!updatedTasks.some(updatedTask => updatedTask.id === task.id)) {
@@ -334,14 +336,14 @@ function updateTaskOrder() {
         }
     });
     
-    // ✅ 로컬 저장소에 최종 정렬된 일정 저장
+    // 로컬 저장소에 최종 정렬된 일정 저장
     localStorage.setItem('tasks', JSON.stringify(updatedTasks));
 }
 
 
 
 
-// ✅ 완료 상태 변경
+// 완료 상태 변경
 function toggleCompletion(id, isCompleted) {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const taskIndex = tasks.findIndex(t => t.id === id);  // ID로 일정의 인덱스 찾기
@@ -351,7 +353,7 @@ function toggleCompletion(id, isCompleted) {
         task.completed = isCompleted;
 
         if (isCompleted) {
-            // ✅ 완료된 일정의 순서를 제일 아래로 이동
+            // 완료된 일정의 순서를 제일 아래로 이동
             tasks.splice(taskIndex, 1); // 기존 위치에서 제거
             tasks.push(task); // 제일 아래로 추가
         }
@@ -402,7 +404,7 @@ function generateId() {
 function addTask() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-    // ✅ 현재 활성화된 탭에 따라 날짜 설정
+    // 현재 활성화된 탭에 따라 날짜 설정
     let taskDate;
     if (activeTab === 'today') {
         taskDate = formatDate(new Date());  // 오늘 날짜
@@ -416,12 +418,12 @@ function addTask() {
         id: generateId(),
         name: '새 일정',
         description: '',
-        date: taskDate,  // ✅ 활성화된 탭에 따라 날짜 설정
+        date: taskDate,  // 활성화된 탭에 따라 날짜 설정
         completed: false,
         delayed: false,
     };
 
-    // ✅ 최상단부터 검사하며 delayed: false를 찾음
+    // 최상단부터 검사하며 delayed: false를 찾음
     let insertIndex = 0; // 기본적으로 맨 위에 추가
     for (let i = 0; i < tasks.length; i++) {
         if (!tasks[i].delayed) {
@@ -435,9 +437,9 @@ function addTask() {
 
     // 로컬 저장소에 업데이트된 일정 저장
     localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem('editId', randomTask.id);  // 추가된 일정의 ID 저장
+    localStorage.setItem('isNewTask', 'true');  // 새 일정 추가 플래그 설정
 
-    // ✅ 일정 추가 후 화면에 즉시 반영
-    loadTasks();
-
-
+    // tasks.html 페이지로 리디렉트
+    window.location.href = './tasks.html';
 }

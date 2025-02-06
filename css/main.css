@@ -161,7 +161,7 @@ a {
     margin: 0%;
 }
 
-/* ✅ 일정 항목 스타일 */
+/* 일정 항목 스타일 */
 #task-list li {
     display: flex;
     align-items: center;
@@ -175,7 +175,7 @@ a {
     border-radius: 16px;
 }
 
-/* ✅ 체크된 항목 스타일 */
+/* 체크된 항목 스타일 */
 #task-list li.completed {
     background-color: #444;
 }
@@ -185,7 +185,7 @@ a {
     color: #bbb;
 }
 
-/* ✅ 체크박스 커스터마이징 */
+/* 체크박스 커스터마이징 */
 #task-list li .custom-checkbox {
     position: relative; /* 터치 확장에 필요한 relative 설정 */
     width: 32px;
@@ -213,7 +213,7 @@ a {
     opacity: 0.6;
 }
 
-/* ✅ 텍스트 스타일 */
+/* 텍스트 스타일 */
 #task-list li .task-text {
     flex: 1;
     color: var(--WHITE, #FFF);
@@ -232,7 +232,7 @@ a {
     text-overflow: ellipsis;
 }
 
-/* ✅ 수정 버튼 */
+/* 수정 버튼 */
 #task-list li .edit-button {
     position: relative; /* 터치 확장에 필요한 relative 설정 */
     background: transparent;

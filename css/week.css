@@ -1,4 +1,4 @@
-/* ✅ 기존 스타일 유지 */
+/* 기존 스타일 유지 */
 body {
     margin: 0 auto;
     background-color: #000;
@@ -33,7 +33,7 @@ a {
     align-items: center;
     justify-content: center;
 }
-/* ✅ 터치 영역 확장 */
+/* 터치 영역 확장 */
 .back-button::before {
     content: '';
     position: absolute;
