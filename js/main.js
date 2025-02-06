@@ -33,7 +33,7 @@ function initializeDefaultTasks() {
         const defaultTasks = [
             {
                 id: generateId(),
-                name: "❗ 어제 미완료된 일정입니다",
+                name: "! 어제 미완료된 일정입니다",
                 description: "어제 미완료된 일정은 하루동안 오늘 탭에 표시됩니다.",
                 date: formatDate(new Date(new Date().setDate(new Date().getDate() - 1))), // 어제 날짜
                 completed: false,
@@ -41,7 +41,15 @@ function initializeDefaultTasks() {
             },
             {
                 id: generateId(),
-                name: "✔ 할 일을 체크해보세요",
+                name: "+ 새로운 일정을 추가해보세요",
+                description: "상단의 + 버튼을 눌러 새 일정을 만들어보세요.",
+                date: formatDate(new Date()), // 오늘 날짜
+                completed: false,
+                delayed: false
+            },
+            {
+                id: generateId(),
+                name: "✔  할 일을 체크해보세요",
                 description: "체크박스를 눌러 완료 상태로 바꿔보세요.",
                 date: formatDate(new Date()), // 오늘 날짜
                 completed: false,
@@ -200,7 +208,6 @@ function loadTasks() {
 
     filteredTasks.forEach((task) => {
         const li = document.createElement('li');
-        li.setAttribute('draggable', true); // ✅ 드래그 활성화
         li.setAttribute('data-id', task.id); // ✅ data-id 속성 추가
     
         const taskDateObj = new Date(task.date);
@@ -243,12 +250,11 @@ function loadTasks() {
         li.appendChild(editButton);
     
         // 드래그 앤 드롭 이벤트 리스너 추가
-
         li.addEventListener('touchstart', (e) => {
             longPressTimer = setTimeout(() => {
                 draggedItem = li;
                 li.style.opacity = '0.5';
-                li.classList.add('dragging'); // 시각적 효과 추가 (선택 사항)
+                li.classList.add('dragging'); // 드래그 시각적 효과 (선택 사항)
             }, 500); // 0.5초 이상 누르면 드래그 시작
         }, { passive: true });
         
@@ -273,32 +279,8 @@ function loadTasks() {
                 }
             }
         }, { passive: false });
-
-        li.addEventListener('dragstart', (e) => {
-            draggedItem = li;
-            setTimeout(() => li.style.opacity = '0.5', 0);
-        });
-    
-        li.addEventListener('dragend', () => {
-            li.style.opacity = '1';
-            draggedItem = null;
-        });
-    
-        li.addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
-    
-        li.addEventListener('drop', (e) => {
-            e.preventDefault();
-            if (draggedItem !== li) {
-                swapTasks(taskList, draggedItem, li);
-                updateTaskOrder();
-            }
-        });
-    
         taskList.appendChild(li);
     });
-    
 }
 //하루 지난 일정만 반환
 function isOneDayPast(taskDate, today) {
