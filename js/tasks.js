@@ -48,6 +48,11 @@ window.onload = () => {
             localStorage.setItem('tempName', task.name || '');
             localStorage.setItem('tempDesc', task.description || '');
 
+            const isNewTask = localStorage.getItem('isNewTask') === 'true'; 
+            if(isNewTask){
+                localStorage.setItem('tempName', '');
+            }
+
             // 날짜 비교 수정
             const taskDate = task.date;
             const todayDate = formatDate(new Date());
@@ -164,14 +169,20 @@ editButton.onclick = () => {
     const editId = localStorage.getItem('editId');  // editIndex → editId
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const todayTab = document.getElementById('today-tab');
-
+    
     if (editId !== null) {
+
+        
         const taskIndex = tasks.findIndex(t => t.id === editId);  // ID로 인덱스 찾기
 
         if (taskIndex !== -1) {
+
+            // Name 값이 빈 문자열이거나 null이면 기본값 설정
+            const taskName = nameInput.value.trim() === '' ? '새 일정' : nameInput.value;
+
             tasks[taskIndex] = {
                 ...tasks[taskIndex],
-                name: nameInput.value,
+                name: taskName,
                 description: descInput.value
             };
 
