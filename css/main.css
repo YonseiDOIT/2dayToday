@@ -55,6 +55,8 @@ a {
     font-style: normal;
     font-weight: 400;
     line-height: 32px;
+
+    user-select: none; /* 드래그 방지 */
 }
 
 .week-button {
@@ -230,6 +232,8 @@ a {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    user-select: none;
 }
 
 /* 수정 버튼 */
