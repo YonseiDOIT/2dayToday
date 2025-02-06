@@ -120,7 +120,7 @@ function goBack() {
             tasks = tasks.filter(task => task.id !== editId);  // ID로 삭제
             localStorage.setItem('tasks', JSON.stringify(tasks));
             localStorage.removeItem('editId');
-            window.location.href = 'index.html';
+            window.location.href = '/';
         }
     }
     window.history.back();
@@ -198,7 +198,7 @@ editButton.onclick = () => {
             localStorage.removeItem('tempName');
             localStorage.removeItem('tempDesc');
             localStorage.setItem('tasks', JSON.stringify(tasks));
-            window.location.href = 'index.html';
+            window.location.href = '/';
         }
     }
 }
@@ -217,7 +217,7 @@ document.querySelector('.deletion-btn').onclick = () => {
         tasks = tasks.filter(task => task.id !== editId);  // ID로 삭제
         localStorage.setItem('tasks', JSON.stringify(tasks));
         localStorage.removeItem('editId');
-        window.location.href = 'index.html';
+        window.location.href = '/';
     }
 };
 
