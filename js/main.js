@@ -271,16 +271,27 @@ function loadTasks() {
         
         li.addEventListener('touchmove', (e) => {
             if (draggedItem) {
-                e.preventDefault(); // 기본 동작 방지
+                e.preventDefault();  // 기본 동작 방지
+        
                 const touch = e.touches[0];
                 const target = document.elementFromPoint(touch.clientX, touch.clientY);
         
                 if (target && target.tagName === 'LI' && target !== draggedItem) {
-                    swapTasks(taskList, draggedItem, target);
-                    updateTaskOrder();
+                    // ✅ 대상 항목의 위치 정보 가져오기
+                    const targetRect = target.getBoundingClientRect();
+                    const targetCenterY = targetRect.top + targetRect.height / 2 ;  // 세로 중앙 좌표
+        
+                    // ✅ 터치 위치가 대상 항목의 세로 중앙을 넘었는지 확인
+                    if (touch.clientY >= targetCenterY) {
+                        swapTasks(taskList, draggedItem, target);  // 순서 교체
+                        updateTaskOrder();  // 로컬 스토리지 업데이트
+                    }
                 }
             }
         }, { passive: false });
+
+
+
         taskList.appendChild(li);
     });
 }
