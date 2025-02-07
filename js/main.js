@@ -37,7 +37,7 @@ function initializeDefaultTasks() {
                 description: "어제 미완료된 일정은 하루동안 오늘 탭에 표시됩니다.",
                 date: formatDate(new Date(new Date().setDate(new Date().getDate() - 1))), // 어제 날짜
                 completed: false,
-                delayed: false
+                delayed: true,
             },
             {
                 id: generateId(),
