@@ -3,6 +3,7 @@ body {
     margin: 0 auto;
     box-sizing: border-box;
     overflow-y: auto;
+    user-select: none; /* 드래그 방지 */
 }
 
 button {
@@ -15,6 +16,7 @@ a {
     outline: none;
     -webkit-tap-highlight-color: transparent; /* 터치 하이라이트 제거 */
     background-color: transparent; /* 배경색 변경 방지 */
+    user-select: none; /* 드래그 방지 */
 }
 
 
