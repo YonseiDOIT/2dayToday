@@ -259,7 +259,10 @@ function loadTasks() {
                 li.classList.add('dragging'); // 드래그 시각적 효과 (선택 사항)
             }, 500); // 0.5초 이상 누르면 드래그 시작
         }, { passive: true });
-        
+        li.addEventListener('touchmove', (e) => {
+            // 스크롤하거나 터치가 이동하면 길게 누르기 취소
+            clearTimeout(longPressTimer);  // ✅ 길게 누르기 취소
+        });
         li.addEventListener('touchend', () => {
             clearTimeout(longPressTimer);
             if (draggedItem) {
