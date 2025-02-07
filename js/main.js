@@ -33,121 +33,6 @@ function initializeDefaultTasks() {
         const defaultTasks = [
             {
                 id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 1))), // 어제 날짜
-                completed: true,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 1))), // 어제 날짜
-                completed: true,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 1))), // 어제 날짜
-                completed: true,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 2))), // 어제 날짜
-                completed: false,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 2))), // 어제 날짜
-                completed: false,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 2))), // 어제 날짜
-                completed: true,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 3))), // 어제 날짜
-                completed: true,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 3))), // 어제 날짜
-                completed: true,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 3))), // 어제 날짜
-                completed: true,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 6))), // 어제 날짜
-                completed: true,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 6))), // 어제 날짜
-                completed: false,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 6))), // 어제 날짜
-                completed: false,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 5))), // 어제 날짜
-                completed: true,
-                delayed: true,
-            },
-            {
-                id: generateId(),
-                name: "영상용 테스트",
-                description: "어제 완료된 일정",
-                date: formatDate(new Date(new Date().setDate(new Date().getDate() - 5))), // 어제 날짜
-                completed: false,
-                delayed: true,
-            },
-
-
-
-            {
-                id: generateId(),
                 name: "! 어제 미완료된 일정입니다",
                 description: "어제 미완료된 일정은 하루동안 오늘 탭에 표시됩니다.",
                 date: formatDate(new Date(new Date().setDate(new Date().getDate() - 1))), // 어제 날짜
@@ -313,8 +198,6 @@ function loadTasks() {
 
     const todayDate = formatDate(today);
     const tomorrowDate = formatDate(tomorrow);
-    const todayDate = formatDate(today);
-    const tomorrowDate = formatDate(tomorrow);
 
     const filteredTasks = tasks.filter(task => {
         const taskDate = task.date;
@@ -393,9 +276,9 @@ function loadTasks() {
             }, 500); // 0.5초 이상 누르면 드래그 시작
         }, { passive: true });
         li.addEventListener('touchmove', (e) => {
-            // 스크롤하거나 터치가 이동하면 길게 누르기 취소
-            clearTimeout(longPressTimer);  // ✅ 길게 누르기 취소
-        });
+            clearTimeout(longPressTimer);  //  길게 누르기 취소
+        }, { passive: true });
+
         li.addEventListener('touchend', () => {
             clearTimeout(longPressTimer);
             if (draggedItem) {
@@ -516,8 +399,6 @@ function toggleCompletion(id, isCompleted) {
 
 
 // 일정 수정
-function editTask(id) {
-    localStorage.setItem('editId', id);
 function editTask(id) {
     localStorage.setItem('editId', id);
     window.location.href = './tasks.html';
