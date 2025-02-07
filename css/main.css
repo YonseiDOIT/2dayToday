@@ -3,7 +3,7 @@ body {
     margin: 0 auto;
     box-sizing: border-box;
     overflow-y: auto;
-    user-select: none; /* 드래그 방지 */
+    user-select: none;
 }
 
 button {
@@ -16,7 +16,6 @@ a {
     outline: none;
     -webkit-tap-highlight-color: transparent; /* 터치 하이라이트 제거 */
     background-color: transparent; /* 배경색 변경 방지 */
-    user-select: none; /* 드래그 방지 */
 }
 
 
@@ -31,6 +30,7 @@ a {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 /* 최상단: 날짜 및 week(기록페이지) 버튼 */
@@ -173,9 +173,10 @@ a {
     align-self: stretch;
     padding: 16px;
     background-color: #32ADE6;
-    border-radius: 16px;
     font-size: 24px;
     transition: background-color 0.3s ease;
+    border-radius: 16px;
+}
 
 /* 체크된 항목 스타일 */
 #task-list li.completed {
