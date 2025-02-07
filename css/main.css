@@ -64,6 +64,7 @@ a {
     height: 32px;
     border: none;
     margin: 0%;
+    user-select: none; 
 }
 
 /* 오늘-내일 탭 */

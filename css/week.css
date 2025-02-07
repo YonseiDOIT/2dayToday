@@ -6,6 +6,7 @@ body {
     overflow-x: hidden; /* 좌우 스크롤 방지 */
     overflow-y: auto; /* 상하 스크롤만 허용 */
     padding: 0; /* 패딩 제거 */
+    user-select: none; 
 }
 button, 
 a {
@@ -98,10 +99,12 @@ a {
 
 .this-week-text {
     margin-right: auto; /* 왼쪽 정렬 */
+    user-select: none; 
 }
 
 .this-week-rate {
     margin-left: auto; /* 오른쪽 정렬 */
+    user-select: none; 
 }
 /* 나의 일주일 텍스트 + 최근 1주일 일정 성공률 */
 .my-week-bar {
