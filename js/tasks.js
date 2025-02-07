@@ -191,10 +191,17 @@ editButton.onclick = () => {
             const tomorrow = new Date();
             tomorrow.setDate(new Date().getDate() + 1);
 
-            tasks[taskIndex].date = todayTab.classList.contains('active') 
-                ? today 
-                : formatDate(tomorrow);  // formatDate로 수정
+            // 선택된 탭에 따라 날짜 업데이트 (delayed가 false일 때만 변경)
+            if (!tasks[taskIndex].delayed) {
+                const today = formatDate(new Date());
+                const tomorrow = new Date();
+                tomorrow.setDate(new Date().getDate() + 1);
 
+                tasks[taskIndex].date = todayTab.classList.contains('active') 
+                    ? today 
+                    : formatDate(tomorrow);  // formatDate로 수정
+            }
+            
             localStorage.removeItem('tempName');
             localStorage.removeItem('tempDesc');
             localStorage.setItem('tasks', JSON.stringify(tasks));
