@@ -1,8 +1,11 @@
+html, body {
+    /* overflow: hidden; */
+}
+
 body {
     font-family: "NanumSquareNeo";
     margin: 0 auto;
     box-sizing: border-box;
-    overflow-y: auto;
     user-select: none;
 }
 
@@ -30,7 +33,7 @@ a {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 /* 최상단: 날짜 및 week(기록페이지) 버튼 */
@@ -153,6 +156,10 @@ a {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+#schedule-container{
+    margin-bottom: 40px;
 }
 
 #task-list {
