@@ -304,12 +304,15 @@ function loadTasks() {
 
     const taskList = document.getElementById('task-list');
     taskList.innerHTML = '';
+    taskList.innerHTML = '';
 
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
 
+    const todayDate = formatDate(today);
+    const tomorrowDate = formatDate(tomorrow);
     const todayDate = formatDate(today);
     const tomorrowDate = formatDate(tomorrow);
 
@@ -338,21 +341,35 @@ function loadTasks() {
     
         li.onclick = () => editTask(task.id);
     
+    
+        li.onclick = () => editTask(task.id);
+    
         const checkbox = document.createElement('div');
         checkbox.className = `custom-checkbox ${task.completed ? 'checked' : ''}`;
         checkbox.onclick = (e) => {
             e.stopPropagation();
             toggleCompletion(task.id, !task.completed);
         };
+        checkbox.onclick = (e) => {
+            e.stopPropagation();
+            toggleCompletion(task.id, !task.completed);
+        };
         li.appendChild(checkbox);
+    
     
         const taskText = document.createElement('span');
         taskText.textContent = `${task.name}`;
         taskText.className = `task-text ${task.completed ? 'completed' : ''}`;
         li.appendChild(taskText);
     
+    
         const editButton = document.createElement('button');
         editButton.className = 'edit-button';
+        editButton.onclick = (e) => {
+            e.stopPropagation();
+            editTask(task.id);
+        };
+    
         editButton.onclick = (e) => {
             e.stopPropagation();
             editTask(task.id);
@@ -362,6 +379,7 @@ function loadTasks() {
         editIcon.src = 'assets/images/more_vert.svg';
         editIcon.alt = 'Edit Icon';
         editIcon.className = 'edit-button-icon';
+    
     
         editButton.appendChild(editIcon);
         li.appendChild(editButton);
@@ -496,7 +514,10 @@ function toggleCompletion(id, isCompleted) {
 
 
 
+
 // 일정 수정
+function editTask(id) {
+    localStorage.setItem('editId', id);
 function editTask(id) {
     localStorage.setItem('editId', id);
     window.location.href = './tasks.html';
@@ -544,6 +565,7 @@ function addTask() {
     }
 
     const randomTask = {
+        id: generateId(),
         id: generateId(),
         name: '새 일정',
         description: '',
