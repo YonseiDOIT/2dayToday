@@ -29,7 +29,6 @@ a {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    overflow-y: scroll;
 }
 
 /* 최상단: 날짜 및 week(기록페이지) 버튼 */
@@ -175,8 +174,6 @@ a {
     border-radius: 16px;
     font-size: 24px;
     transition: background-color 0.3s ease;
-    border-radius: 16px;
-}
 
 /* 체크된 항목 스타일 */
 #task-list li.completed {
